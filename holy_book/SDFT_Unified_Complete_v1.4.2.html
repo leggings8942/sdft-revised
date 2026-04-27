@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>SDFT理論 統合ドキュメント v1.4.1</title>
+<title>SDFT理論 統合ドキュメント v1.4.2</title>
 <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
 <script async="" id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 <style>
@@ -328,13 +328,165 @@
                 flex-direction: column;
             }
         }
-    </style>
+    
+
+        /* Integrated v1.4.2 extension styles */
+        .integrated-note {
+            background-color: #f9f9f9;
+            border-left: 4px solid #001a4d;
+            padding: 18px 22px;
+            border-radius: 8px;
+            margin-bottom: 24px;
+        }
+        .integrated-note strong {
+            color: #001a4d;
+        }
+        .ext-card {
+            background: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+            padding: 30px;
+            margin-bottom: 24px;
+        }
+        .ext-card h2 {
+            font-size: 18px;
+            color: #1a3a5c;
+            margin-bottom: 16px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e8a020;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .ext-card h3 {
+            font-size: 15px;
+            color: #1a3a5c;
+            margin: 22px 0 10px;
+            font-weight: 700;
+            border-left: 4px solid #1a3a5c;
+            padding-left: 10px;
+        }
+        .ext-section-num {
+            display: inline-block;
+            background: #e8a020;
+            color: white;
+            font-size: 12px;
+            font-weight: 700;
+            padding: 3px 9px;
+            border-radius: 12px;
+        }
+        .ext-exec-box {
+            background: linear-gradient(135deg, #eaf3fb, #f0f8f0);
+            border-left: 4px solid #2ecc71;
+            padding: 18px 24px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+        }
+        .ext-exec-box .label {
+            font-size: 12px;
+            font-weight: 700;
+            color: #2ecc71;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+        }
+        .ext-insight-box {
+            background: #fff8e8;
+            border-left: 4px solid #e8a020;
+            padding: 16px 20px;
+            border-radius: 6px;
+            margin: 16px 0;
+            font-size: 13.5px;
+        }
+        .ext-alert-box {
+            background: #fef2f2;
+            border-left: 4px solid #e74c3c;
+            padding: 16px 20px;
+            border-radius: 6px;
+            margin: 16px 0;
+            font-size: 13.5px;
+        }
+        .ext-success-box {
+            background: #f0fdf4;
+            border-left: 4px solid #2ecc71;
+            padding: 16px 20px;
+            border-radius: 6px;
+            margin: 16px 0;
+            font-size: 13.5px;
+        }
+        .ext-grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+        }
+        .ext-diagram-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: #f8fafc;
+            padding: 24px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            margin: 20px 0;
+        }
+        .ext-diagram-nodes {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .ext-diagram-node {
+            background: white;
+            border: 2px solid #1a3a5c;
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+            width: 145px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .ext-diagram-node strong {
+            display: block;
+            color: #1a3a5c;
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+        .ext-diagram-node span {
+            font-size: 11px;
+            color: #7f8c8d;
+        }
+        .ext-diagram-arrow {
+            color: #1a3a5c;
+            font-size: 24px;
+            margin-bottom: 16px;
+        }
+        .ext-diagram-core {
+            background: #1a3a5c;
+            color: white;
+            padding: 16px 32px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 16px;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 10px rgba(26,58,92,0.3);
+        }
+        .ext-math {
+            background: #f4f6fb;
+            border-left: 4px solid #5b8bd1;
+            padding: 14px 18px;
+            border-radius: 6px;
+            margin: 14px 0;
+            overflow-x: auto;
+        }
+        @media (max-width: 768px) {
+            .ext-grid-2 { grid-template-columns: 1fr; }
+        }
+</style>
 </head>
 <body>
 <div class="container">
 <!-- Sidebar Navigation -->
 <aside class="sidebar">
-<h1>SDFT理論 v1.4.1</h1>
+<h1>SDFT理論 v1.4.2</h1>
 <nav>
 <ul>
 <li><a href="#1">SD v3.5.4</a></li>
@@ -345,15 +497,15 @@
 <li><a href="#6">SDFT Unified v1.2</a></li>
 <li><a href="#7">SDFT Unified v1.3</a></li>
 <li><a href="#8">SDFT Unified v1.3.1</a></li>
-<li><a href="#9">SDFT Unified v1.4</a></li><li><a href="#10">SDFT Unified v1.4.1</a></li></ul>
+<li><a href="#9">SDFT Unified v1.4</a></li><li><a href="#10">SDFT Unified v1.4.1</a></li><li><a href="#11">SDFT Unified v1.4.2</a></li></ul>
 </nav>
 </aside>
 <!-- Main Content -->
 <main class="main-content">
 <!-- Header -->
 <div class="header">
-<h1>SDFT理論 統合ドキュメント v1.4.1</h1>
-<p>Standard Deviation Fourier Transform - Comprehensive Theory Integration with Gauge / Maxwell / Hamiltonian Extension</p>
+<h1>SDFT理論 統合ドキュメント v1.4.2</h1>
+<p>Standard Deviation Fourier Transform - Comprehensive Theory Integration with Gauge / Maxwell / Hamiltonian / Affordance Extension</p>
 </div>
 <!-- Update Log -->
 <section id="update-log">
@@ -375,7 +527,7 @@
 <tr><td>SDFT Unified v1.2</td><td>Complete Unified Integration</td><td>2026-03-02</td></tr>
 <tr><td>SDFT Unified v1.3</td><td>Hurst Integration / Temporal Memory Layer / GPTs Knowledge Optimization</td><td>2026-03-23</td></tr>
 <tr><td>SDFT Unified v1.3.1</td><td>S-D-H Phase Diagram / Trajectory Detection / Sliding Window Early Warning Layer</td><td>2026-03-23</td></tr>
-<tr><td>SDFT Unified v1.4</td><td>Gauge-Invariant Semantic Field / Maxwellian Propagation / Hamiltonian Intervention / RAG-Ready Unified Source</td><td>2026-03-25</td></tr><tr><td>SDFT Unified v1.4.1</td><td>Agent System / Custom Instructions / Knowledge Manifest / Output Contract Bundling for Immediate RAG Use</td><td>2026-03-25</td></tr></tbody>
+<tr><td>SDFT Unified v1.4</td><td>Gauge-Invariant Semantic Field / Maxwellian Propagation / Hamiltonian Intervention / RAG-Ready Unified Source</td><td>2026-03-25</td></tr><tr><td>SDFT Unified v1.4.1</td><td>Agent System / Custom Instructions / Knowledge Manifest / Output Contract Bundling for Immediate RAG Use</td><td>2026-03-25</td></tr><tr><td>SDFT Unified v1.4.2</td><td>Integrated Packaging of v1.4.1 + SDFT-A Extension v0.1 (Affordance Layer / Cognitive-Normative Mediation / Behavior-Oriented Intervention)</td><td>2026-04-07</td></tr></tbody>
 </table>
 </section>
 <!-- Document Sections -->
@@ -3593,9 +3745,9 @@
 <p>ここで H は S や F のサブ要素ではない。S が高くても H が高い場合は「荒いが持続的な相」、S が低くても H が低い場合は「見かけ上静かだが持続不能な相」が存在する。ゆえに H は、D を時間方向に延長する補助次元、すなわち <strong>D の時間的安定性レイヤー</strong> として扱うのが最も整合的である。</p>
 <h3 class="section-header" id="sec-12.3">12.3 数学的関係：D と H の双対性</h3>
 <p>自己相似過程において、フラクタル次元 D と Hurst 指数 H には近似的に以下の双対関係がある。</p>
-<p>\[ D pprox 2 - H \]</p>
+<div class="display-math-block"><p>\[ D pprox 2 - H \]</p><div class="math-fallback">Formula: D pprox 2 - H</div></div>
 <p>これは特にグラフ型時系列の粗さを扱う上で有効であり、D が「どれだけギザギザか」を、H が「そのギザギザがどれだけ同方向へ持続するか」を示す。したがって v1.3 では、静的推定量としての D に対し、時間窓ごとに推定される H を結合し、以下のような拡張状態量を採用する。</p>
-<p>\[ D^{*}(t) = \Phiigl(D(t), H(t)igr) \]</p>
+<div class="display-math-block"><p>\[ D^{*}(t) = \Phiigl(D(t), H(t)igr) \]</p><div class="math-fallback">Formula: D^{*}(t) = \Phiigl(D(t), H(t)igr)</div></div>
 <p>ここで \(\Phi\) は用途依存の統合関数であり、最小実装では単純な対表示でもよい。重要なのは、D 単独では「複雑に見える」状態と「持続可能に複雑である」状態を識別できない一方、H を伴うことで、構造の見かけと持続性を分離できる点にある。</p>
 <h3 class="section-header" id="sec-12.4">12.4 新しい状態判定規則</h3>
 <p>v1.3では、固定点/動的平衡/発散という従来の判定に、H に基づく時間安定性判定を重ねる。</p>
@@ -3614,7 +3766,7 @@
 <p>特に重要なのは、相転移のトリガーが「Sの絶対値」だけではなく、<strong>H の低下による D の維持不能化</strong>として先行検出できることである。すなわち、v1.3 の早期警戒ロジックは、S↑・D↑・H↓ の同時発生を危険信号として扱う。</p>
 <h3 class="section-header" id="sec-12.5">12.5 SDFT-H 空間におけるリミットサイクル再定義</h3>
 <p>従来の S-D または S-D-F-T 空間における動的平衡は、「秩序とカオスの間を周回する閉軌道」として定義されていた。v1.3 ではこれを、</p>
-<p>\[ \mathcal{L}_{SDFTH} = \{ (S(t),D(t),F(t),T(t),H(t)) \mid t \in I \} \]</p>
+<div class="display-math-block"><p>\[ \mathcal{L}_{SDFTH} = \{ (S(t),D(t),F(t),T(t),H(t)) \mid t \in I \} \]</p><div class="math-fallback">Formula: \mathcal{L}_{SDFTH} = \{ (S(t),D(t),F(t),T(t),H(t)) \mid t \in I \}</div></div>
 <p>という高次元軌道として再定義する。このとき、真に生命的/持続的な軌道とは、単に閉じているだけでなく、H が極端に低下せず、履歴相関が断裂しない軌道である。言い換えれば、リミットサイクルは「戻ってくること」だけではなく、「戻り方に記憶があること」を必要条件とする。</p>
 <h3 class="section-header" id="sec-12.6">12.6 実装指針（最小API）</h3>
 <p>GPTs Knowledge や外部実装での参照容易性を考慮し、v1.3 の最小APIを以下とする。</p>
@@ -3734,9 +3886,9 @@ def early_warning_score(df):
 </table>
 <h3 class="section-header" id="sec-13.4">13.4 相転移条件の再定義</h3>
 <p>v1.3 では H の低下を主因とする再定義を導入した。v1.3.1 ではこれを運用可能な検出条件として明示化する。相転移の前兆条件は、第一近似として以下で与える。</p>
-<p>\[
+<div class="display-math-block"><p>\[
                     \frac{dH_t}{dt} &lt; 0,\qquad Var(D_{t-w:t}) \uparrow,\qquad \frac{dS_t}{dt} &gt; 0
-                    \]</p>
+                    \]</p><div class="math-fallback">Formula: \frac{dH_t}{dt} < 0,\qquad Var(D_{t-w:t}) \uparrow,\qquad \frac{dS_t}{dt} > 0</div></div>
 <p>ここで \(w\) は観測窓長である。意味は明確で、時間記憶 H が崩れ、構造 D が窓内で不安定化し、拡散 S が増大しているとき、系は旧来のリミットサイクルを維持できず、別の相へ遷移する確率が高まる。したがって、<strong>相転移の本質は「Sの極大化」そのものではなく、「H低下を起点としたD保持不能の発生」</strong>にある。</p>
 <h3 class="section-header" id="sec-13.5">13.5 スライディングウィンドウ観測</h3>
 <p>実務適用では、時系列全体から単発で S, D, H を計算するのではなく、長さ \(w\) のスライディングウィンドウを用いて局所状態を逐次計算する。各窓 \(W_t = [x_{t-w+1}, ..., x_t]\) に対して \((S_t, D_t, H_t)\) を算出し、その系列 \(\{(S_t,D_t,H_t)\}\) を追跡することで、<strong>位相図上の軌跡の崩れ、閉軌道の逸脱、局所的な相転移</strong>を可視化できる。</p>
@@ -3853,43 +4005,43 @@ def phase_alert(df, h_drop=-0.03, d_var_q=0.75, s_rise=0.0, lookback=5):
 <h3 class="section-header" id="sec-14.4">14.4 ゲージ変換による「意味の不変性」</h3>
 <p>各ノード \(i\) は、部署・現場・店舗・役職・職能など固有の意味座標系を持つ。この座標系の違いを、単位四元数 \(g_i \in Sp(1)\) による局所ゲージ変換として表す。</p>
 <p>ノード状態およびリンク演算子の変換則を以下とする。</p>
-<p>\[
+<div class="display-math-block"><p>\[
         q_i' = g_i \otimes q_i,
         \qquad
         W_{ij}' = g_j \otimes W_{ij} \otimes g_i^{-1}
-        \]</p>
+        \]</p><div class="math-fallback">Formula: q_i' = g_i \otimes q_i, \qquad W_{ij}' = g_j \otimes W_{ij} \otimes g_i^{-1}</div></div>
 <p>このとき、リンクを通じた予測状態 \(W_{ij} \otimes q_i\) と実測状態 \(q_j\) の差は、局所座標系を変えても本質的に同じである。すなわち、<strong>言葉や KPI 定義が局所的に書き換わっても、作用量が不変なら意味は同一</strong>とみなせる。</p>
 <p>ここで作用量を</p>
-<p>\[
+<div class="display-math-block"><p>\[
         \mathcal{A}[q,W,\phi] =
         \sum_{(i\to j)} \lVert q_j - W_{ij}\otimes q_i \rVert^2
         + \alpha \sum_{(i\to j)} (\phi_j - \phi_i)^2
         + \beta \sum_{\ell} \lVert \mathrm{Hol}_{\ell}(W) - 1 \rVert^2
-        \]</p>
+        \]</p><div class="math-fallback">Formula: \mathcal{A}[q,W,\phi] = \sum_{(i\to j)} \lVert q_j - W_{ij}\otimes q_i \rVert^2 + \alpha \sum_{(i\to j)} (\phi_j - \phi_i)^2 + \beta \sum_{\ell} \lVert \mathrm{Hol}_{\ell}(W) - 1 \rVert^2</div></div>
 <p>と定義する。ここで \(\mathrm{Hol}_{\ell}(W)\) はループ \(\ell\) 上のホロノミーであり、組織や空間を一周したあとで意味が元に戻らない場合、そのループに<strong>意味曲率</strong>が蓄積していると解釈する。</p>
 <h3 class="section-header" id="sec-14.5">14.5 レジーム間テンションの再定義</h3>
 <p>v9.1 で定義されたレジーム間テンションを、ゲージ歪みを含む形へ拡張する。</p>
-<p>\[
+<div class="display-math-block"><p>\[
         \mathcal{T}_{AB}^{*} =
         \left|\log\frac{L_A}{L_B}\right|
         + \kappa\,\Delta Topo
         + \lambda\,\Delta Op
         + \eta\,\Delta Gauge
-        \]</p>
+        \]</p><div class="math-fallback">Formula: \mathcal{T}_{AB}^{*} = \left|\log\frac{L_A}{L_B}\right| + \kappa\,\Delta Topo + \lambda\,\Delta Op + \eta\,\Delta Gauge</div></div>
 <p>ここで \(\Delta Gauge\) はホロノミー偏差や局所ゲージ差から求める意味曲率であり、「構造的にはつながっているのに会話が通らない」状態を検知する。これにより、サイロ化や KPI 齟齬の原因を、単なる組織断絶ではなく<strong>接続の曲率異常</strong>として局所化できる。</p>
 <h3 class="section-header" id="sec-14.6">14.6 マクスウェル方程式による情報伝播</h3>
 <p>情報の浸透、施策の波及、賑わいの伝播を場の方程式として扱う。ノード \(i\) の自由エネルギーからスカラーポテンシャル \(\phi_i = \nu_F F_i\) を定め、リンク演算子の対数からベクトルポテンシャル \(\mathbf{A}_{ij}\) を定める。</p>
-<p>\[
+<div class="display-math-block"><p>\[
         \phi_i = \nu_F F_i,
         \qquad
         \mathbf{A}_{ij} = \log W_{ij}
-        \]</p>
+        \]</p><div class="math-fallback">Formula: \phi_i = \nu_F F_i, \qquad \mathbf{A}_{ij} = \log W_{ij}</div></div>
 <p>すると離散グラフ上の電場・磁場に相当する量を</p>
-<p>\[
+<div class="display-math-block"><p>\[
         E_{ij} = -\frac{\phi_j - \phi_i}{\ell_{ij}} - \partial_t A_{ij},
         \qquad
         B_{\ell} = \mathrm{curl}\,A \approx \log\bigl(\mathrm{Hol}_{\ell}(W)\bigr)
-        \]</p>
+        \]</p><div class="math-fallback">Formula: E_{ij} = -\frac{\phi_j - \phi_i}{\ell_{ij}} - \partial_t A_{ij}, \qquad B_{\ell} = \mathrm{curl}\,A \approx \log\bigl(\mathrm{Hol}_{\ell}(W)\bigr)</div></div>
 <p>と置ける。ここで \(\ell_{ij}\) はリンク長である。直感的には、\(E\) は「施策がどれだけ強く押すか」、\(B\) は「流れがどれだけ循環に拘束されるか」を示す。</p>
 <h3 class="section-header" id="sec-14.7">14.7 媒質パラメータ・到達時間・サイロ壁</h3>
 <p>情報伝播の速度と減衰は、組織や空間を媒質とみなし、受容性 \(\varepsilon\)、慣性 \(\mu\)、散逸係数 \(\sigma\) によって与える。</p>
@@ -3904,45 +4056,45 @@ def phase_alert(df, h_drop=-0.03, d_var_q=0.75, s_rise=0.0, lookback=5):
 </tbody>
 </table>
 <p>v1.4 では、散逸係数を</p>
-<p>\[
+<div class="display-math-block"><p>\[
         \sigma = \sigma_0 + aS + b\mathcal{T}
-        \]</p>
+        \]</p><div class="math-fallback">Formula: \sigma = \sigma_0 + aS + b\mathcal{T}</div></div>
 <p>と置く。すなわち、エントロピー上昇とレジーム間テンション増大は、どちらも情報の届きにくさとして現れる。さらに、伝播速度、インピーダンス、減衰率は</p>
-<p>\[
+<div class="display-math-block"><p>\[
         v = \frac{1}{\sqrt{\mu\varepsilon}},
         \qquad
         Z = \sqrt{\frac{\mu}{\varepsilon}},
         \qquad
         \alpha \approx \frac{\sigma}{2}\sqrt{\frac{\mu}{\varepsilon}}
-        \]</p>
+        \]</p><div class="math-fallback">Formula: v = \frac{1}{\sqrt{\mu\varepsilon}}, \qquad Z = \sqrt{\frac{\mu}{\varepsilon}}, \qquad \alpha \approx \frac{\sigma}{2}\sqrt{\frac{\mu}{\varepsilon}}</div></div>
 <p>で定義し、任意のパス \(P\) に対し到達時間</p>
-<p>\[
+<div class="display-math-block"><p>\[
         \tau(P)=\sum_{e\in P} \frac{\ell_e}{v_e}
-        \]</p>
+        \]</p><div class="math-fallback">Formula: \tau(P)=\sum_{e\in P} \frac{\ell_e}{v_e}</div></div>
 <p>および減衰後振幅</p>
-<p>\[
+<div class="display-math-block"><p>\[
         A_{out}=A_{in}\exp\left(-\sum_{e\in P}\alpha_e\ell_e\right)
-        \]</p>
+        \]</p><div class="math-fallback">Formula: A_{out}=A_{in}\exp\left(-\sum_{e\in P}\alpha_e\ell_e\right)</div></div>
 <p>を計算する。異なる媒質境界でのサイロ壁透過率は</p>
-<p>\[
+<div class="display-math-block"><p>\[
         \Pi_{trans}=\frac{4Z_1Z_2}{(Z_1+Z_2)^2}
-        \]</p>
+        \]</p><div class="math-fallback">Formula: \Pi_{trans}=\frac{4Z_1Z_2}{(Z_1+Z_2)^2}</div></div>
 <p>とする。これにより、「施策がどこまで届くか」「どこで反射するか」「どの部署・導線が壁になっているか」を定量化できる。</p>
 <h3 class="section-header" id="sec-14.8">14.8 ハミルトニアン拡張と荷電ノード</h3>
 <p>自由エネルギー \(F\) は状態の高さを示すが、v1.4 ではさらに、ノードが場の中をどう動かすか・動かされるかをハミルトニアンで表現する。ノード \(i\) に電荷 \(Q_i\)（影響力）と質量 \(m_i\)（慣性）を与え、運動量 \(p_i\)、スカラーポテンシャル \(\phi_i\)、ベクトルポテンシャル \(A_i\) に対して</p>
-<p>\[
+<div class="display-math-block"><p>\[
         \mathcal{H}_i =
         \frac{1}{2m_i}\lVert p_i - Q_i A_i \rVert^2
         + Q_i\phi_i
         + V_D(D_i)
         + V_{\mathcal{T}}(\mathcal{T}_i)
         + V_{int}(i)
-        \]</p>
+        \]</p><div class="math-fallback">Formula: \mathcal{H}_i = \frac{1}{2m_i}\lVert p_i - Q_i A_i \rVert^2 + Q_i\phi_i + V_D(D_i) + V_{\mathcal{T}}(\mathcal{T}_i) + V_{int}(i)</div></div>
 <p>と置く。\(Q_i &gt; 0\) は周囲を引き寄せるノード（カリスマ店員、強い KPI、中心施策）、\(Q_i &lt; 0\) は周囲を反発させるノード（対立を生む評価制度、摩擦源）として機能する。これにより、重要ノードを「強い」ではなく<strong>場を歪める存在</strong>として捉えられる。</p>
 <p>介入ベクトルはローレンツ力型に</p>
-<p>\[
+<div class="display-math-block"><p>\[
         \Delta q \sim Q(\mathbf{E} + \mathbf{v}\times\mathbf{B})
-        \]</p>
+        \]</p><div class="math-fallback">Formula: \Delta q \sim Q(\mathbf{E} + \mathbf{v}\times\mathbf{B})</div></div>
 <p>と表せる。すなわち、施策の直接効果（電場的）と、循環構造による巻き込み・拘束（磁場的）を合成して、行動変容の方向を予測する。</p>
 <h3 class="section-header" id="sec-14.9">14.9 最小データスキーマ</h3>
 <p>AIエージェントが即利用できるよう、v1.4 の最小入力スキーマを以下に固定する。ノードとエッジを別テーブルで保持する。</p>
@@ -5164,8 +5316,270 @@ if __name__ == "__main__":
 <p>v1.4 が理論層の統合であったのに対し、v1.4.1 は<strong>知識運用層の統合</strong>である。これにより、SDFT は「読む理論」から、「そのまま RAG として投入し、再現的にレポートや分析を返す理論」へ一段進む。特に、用語整合、版管理、節構造、推論順序、出力契約まで明文化したことにより、エージェントの応答ぶれと解釈ぶれを抑制できる。</p>
 </div>
 </section>
-
-</main>
+<section class="document-section" id="11"><h2 class="doc-title">SDFT Unified v1.4.2</h2><div class="doc-content"><div class="integrated-note"><p><strong>統合方針：</strong>本章は <code>SDFT_Unified_Complete_v1.4.1</code> の記述体系・実装思想・更新ログの流れを継承したうえで、<code>SDFT_A_Extension_v0_1</code> を追記統合した v1.4.2 である。狙いは、既存の S・D・H・F・𝓣 による状態記述、意味場、伝播、ハミルトニアン介入を保持しながら、A = Affordance（行為可能性場）を追加し、認知・規範・相互期待を媒介した行動変容を扱えるようにすることにある。</p></div><div class="ext-card">
+<h2><span class="ext-section-num">1</span> 本拡張の位置づけ</h2>
+<div class="ext-exec-box">
+<div class="label">Extension Scope</div>
+<p>本書は、既存の SDFT v1.4.1 を否定せず、その上に <strong>A = Affordance（行為可能性場）</strong> を第二層として追加する仕様書である。狙いは、店舗・都市・組織などの状態記述に加え、主体が「その場で何をできると感じるか」「何をしてよいと感じるか」「実際に動くか」をモデル化することである。</p>
+</div>
+<p>既存 SDFT は、S・D・H・F・𝓣 を中核に、四元数状態 <strong>q</strong>、意味変換演算子 <strong>W</strong>、ポテンシャル、伝播媒質、ハミルトニアン介入まで備えている。したがって「世界の状態」「意味の歪み」「介入方向」の骨格はすでに強い。本拡張では、それでもなお残る「人はなぜ動かないのか」を、客観状態の不足ではなく、<strong>知覚された行為可能性の不足</strong> として扱う。</p>
+<div class="ext-insight-box">
+    端的に言えば、SDFT が扱ってきたのは「世界がどうなっているか」であり、SDFT-A が加えるのは「その世界が主体にどう立ち現れているか」である。
+  </div>
+</div><div class="ext-card">
+<h2><span class="ext-section-num">2</span> 問題設定</h2>
+<div class="ext-grid-2">
+<div class="ext-alert-box">
+<p><strong>既存モデルが得意な点</strong></p>
+<ul>
+<li>機械制御や状態遷移の記述</li>
+<li>店舗・都市・組織などにおける動的平衡 / 相転移の兆候</li>
+<li>意味場の歪みや伝播摩擦の特定</li>
+</ul>
+</div>
+<div class="ext-success-box">
+<p><strong>なお不足しやすい点</strong></p>
+<ul>
+<li>主体が何を見つけるか</li>
+<li>その行為が自分に可能だと感じるか</li>
+<li>やってよいと感じるか</li>
+<li>他者も応じると予期できるか</li>
+</ul>
+</div>
+</div>
+<p>人の行動変容は、客観的に優れた構造だけでは生じない。ある施策が「正しい」ことと、その施策に向けて人が実際に動くことは別である。よって、状態場と行動の間に、<strong>認知的・規範的・相互期待的な媒介層</strong> を置く必要がある。</p>
+</div><div class="ext-card">
+<h2><span class="ext-section-num">3</span> A（Affordance）層の定義</h2>
+<p><strong>A</strong> とは、ある主体 <em>i</em> が、ある場 <em>x</em> において、ある行為 <em>a</em> を「見つけられ」「実行できそうで」「社会的に許容され」「意味がある」と知覚する強さである。</p>
+<div class="math-fallback" style="display:block; margin:12px 0 18px 0;">
+  <strong>定義式（プレーン表示）:</strong><br/>
+  A_i(a|x,t) = σ(Λ_i(a|x,t))
+</div>
+<div class="ext-diagram-container">
+<div class="ext-diagram-nodes">
+<div class="ext-diagram-node"><strong>S</strong><span>エントロピー<br/>拡散・無秩序</span></div>
+<div class="ext-diagram-node"><strong>D</strong><span>フラクタル次元<br/>複雑度・粗さ</span></div>
+<div class="ext-diagram-node"><strong>H</strong><span>時間的記憶<br/>持続・慣性</span></div>
+<div class="ext-diagram-node"><strong>F</strong><span>自由エネルギー<br/>駆動余力</span></div>
+<div class="ext-diagram-node"><strong>𝓣</strong><span>テンション<br/>摩擦・壁</span></div>
+<div class="ext-diagram-node"><strong>A</strong><span>アフォーダンス<br/>行為可能性</span></div>
+</div>
+<div class="ext-diagram-arrow">▼</div>
+<div class="ext-diagram-core">SDFT-A 二層構造：状態場 → 行為可能性場 → 行動</div>
+</div>
+<h3>3.1 A の最小定義</h3>
+<div class="ext-math">\[
+    A_i(a\mid x,t) = \sigma(\Lambda_i(a\mid x,t))
+  \]<div class="math-fallback">Formula: A_i(a\mid x,t) = \sigma(\Lambda_i(a\mid x,t))</div></div>
+<p>ここで \(\sigma\) はシグモイド、\(\Lambda\) は行為可能性のロジットである。A は 0〜1 の連続量とし、値が大きいほどその行為は主体にとって「起こりやすい」。</p>
+<h3>3.2 A の成分分解</h3>
+<div class="ext-math">\[
+    \Lambda_i = w_s S_a + w_f F_a + w_l L_a + w_r R_a + w_m M_a - w_c C_a + b
+  \]<div class="math-fallback">Formula: \Lambda_i = w_s S_a + w_f F_a + w_l L_a + w_r R_a + w_m M_a - w_c C_a + b</div></div>
+<table>
+<tr><th>記号</th><th>名称</th><th>意味</th><th>典型例</th></tr>
+<tr><td>\(S_a\)</td><td>Salience</td><td>その行為が目に入るか / 気づけるか</td><td>サイン視認、議題の明確さ</td></tr>
+<tr><td>\(F_a\)</td><td>Feasibility</td><td>自分にできそうか / 実行可能か</td><td>時間余力、スキル、導線の明快さ</td></tr>
+<tr><td>\(L_a\)</td><td>Legitimacy</td><td>やってよさそうか / 浮かないか</td><td>心理的安全性、暗黙ルール、空気</td></tr>
+<tr><td>\(R_a\)</td><td>Reward / Relevance</td><td>意味・便益があると感じるか</td><td>利得、納得、達成感</td></tr>
+<tr><td>\(M_a\)</td><td>Mutuality</td><td>他者も応じそうか / 片道にならないか</td><td>協力期待、来店時の反応見込み</td></tr>
+<tr><td>\(C_a\)</td><td>Cognitive Cost</td><td>面倒さ、不安、恥、解釈負荷</td><td>複雑手順、説明不足、稟議負荷</td></tr>
+</table>
+</div><div class="ext-card">
+<h2><span class="ext-section-num">4</span> 既存 SDFT との接続</h2>
+<h3>4.1 二層因果</h3>
+<div class="ext-math">\[
+    (S,D,H,F,\mathcal{T}) \rightarrow A \rightarrow B \rightarrow (S,D,H,F,\mathcal{T})'
+  \]<div class="math-fallback">Formula: (S,D,H,F,\mathcal{T}) \rightarrow A \rightarrow B \rightarrow (S,D,H,F,\mathcal{T})'</div></div>
+<p>ここで B は行動である。構造場が A を規定し、A が行動発火確率を規定し、その行動が再び構造場を更新する。これにより、自然科学的な状態軌跡と、社会科学的な行動媒介をひとつのループで記述できる。</p>
+<h3>4.2 SDFT の各変数との対応</h3>
+<table>
+<tr><th>既存変数</th><th>SDFT-A における役割</th><th>A との関係</th></tr>
+<tr><td>S</td><td>拡散・散逸・混乱度</td><td>S が高すぎると認知負荷やノイズとして A を下げやすい</td></tr>
+<tr><td>D</td><td>構造の粗さ / 複雑度</td><td>D が高いと経路選択や解釈にコストを生む場合がある</td></tr>
+<tr><td>H</td><td>時間的持続 / 習慣</td><td>習慣化された行為は A の実効値を上げる</td></tr>
+<tr><td>F</td><td>客観的な駆動余力</td><td>F が高くても A が低いと行動は起きにくい</td></tr>
+<tr><td>𝓣</td><td>摩擦 / 壁 / レジーム差</td><td>規範壁・認知壁・意味壁が A を減衰させる</td></tr>
+</table>
+<div class="ext-insight-box">
+    客観的にはポテンシャルがあっても、人が動かないのは「F が不足している」のではなく「A が立っていない」可能性が高い。ここが本拡張の核心である。
+  </div>
+</div><div class="ext-card">
+<h2><span class="ext-section-num">5</span> 数理仕様</h2>
+<h3>5.1 A ポテンシャル</h3>
+<div class="ext-math">\[
+    \phi_A = \nu_A A
+  \]<div class="math-fallback">Formula: \phi_A = \nu_A A</div></div>
+<p>\(\phi_A\) は知覚された行為可能性のポテンシャルである。既存の自由エネルギー由来ポテンシャル \(\phi\) に対し、\(\phi_A\) は「その行為が引力を持つか」を表す。</p>
+<h3>5.2 総合ポテンシャル</h3>
+<div class="ext-math">\[
+    \phi_{\mathrm{total}} = \phi + \gamma_A \phi_A
+  \]<div class="math-fallback">Formula: \phi_{\mathrm{total}} = \phi + \gamma_A \phi_A</div></div>
+<p>\(\gamma_A\) は、構造ポテンシャルに対してアフォーダンス層がどれだけ効くかを表す結合係数である。</p>
+<h3>5.3 行動発火確率</h3>
+<div class="ext-math">\[
+    P(B_i = 1) = \sigma(\alpha_A A_i + \alpha_F F_i + \alpha_H H_i - \alpha_T \mathcal{T}_i + b)
+  \]<div class="math-fallback">Formula: P(B_i = 1) = \sigma(\alpha_A A_i + \alpha_F F_i + \alpha_H H_i - \alpha_T \mathcal{T}_i + b)</div></div>
+<p>この式により、客観的な駆動余力だけでなく、認知された実行可能性が行動に直接効く形となる。</p>
+<h3>5.4 実効ハミルトニアン</h3>
+<div class="ext-math">\[
+    \mathcal{H}_{\mathrm{eff}} = \mathcal{H}_{\mathrm{SDFT}} + \beta_C C^2 + \beta_L (1-L)^2,
+    \quad \phi \mapsto \phi + \gamma_A \phi_A
+  \]<div class="math-fallback">Formula: \mathcal{H}_{\mathrm{eff}} = \mathcal{H}_{\mathrm{SDFT}} + \beta_C C^2 + \beta_L (1-L)^2, \quad \phi \mapsto \phi + \gamma_A \phi_A</div></div>
+<p>行為可能性が低く、認知コストや非正当性が高いと、介入の“運動コスト”が増す。これにより「理論上は最適だが、人が動かない介入」を避けやすくなる。</p>
+<h3>5.5 エッジ上の A 伝播</h3>
+<div class="ext-math">\[
+    A_{i \to j}^{\mathrm{flow}} = \mathrm{clip}(A_i + g_{ij} - n_{ij} - c_{ij} - \rho_{ij}, 0, 1)
+  \]<div class="math-fallback">Formula: A_{i \to j}^{\mathrm{flow}} = \mathrm{clip}(A_i + g_{ij} - n_{ij} - c_{ij} - \rho_{ij}, 0, 1)</div></div>
+<p>ここで \(g_{ij}\) は affordance gain、\(n_{ij}\) は規範障壁、\(c_{ij}\) は認知障壁、\(\rho_{ij}\) は意味残差や距離に基づく減衰である。既存の伝播・インピーダンス・減衰の設計に加え、「その行為が通るか」という社会的な伝播性を評価できる。</p>
+</div><div class="ext-card">
+<h2><span class="ext-section-num">6</span> Node / Edge スキーマ</h2>
+<h3>6.1 NodeState</h3>
+<table>
+<tr><th>項目</th><th>型</th><th>意味</th><th>必須</th></tr>
+<tr><td>node_id, regime, q_state</td><td>識別子 / 状態</td><td>既存 v1.4.1 と同じ</td><td>Yes</td></tr>
+<tr><td>S, D, H, U, Theta</td><td>float</td><td>基礎状態量</td><td>Yes</td></tr>
+<tr><td>salience</td><td>float</td><td>視認・顕在性</td><td>No</td></tr>
+<tr><td>feasibility</td><td>float</td><td>主体にとっての実行可能性</td><td>No</td></tr>
+<tr><td>legitimacy</td><td>float</td><td>やってよいという正当感</td><td>No</td></tr>
+<tr><td>reward</td><td>float</td><td>便益・意味・魅力</td><td>No</td></tr>
+<tr><td>mutuality</td><td>float</td><td>他者応答の見込み</td><td>No</td></tr>
+<tr><td>cognitive_cost</td><td>float</td><td>面倒さ・不安・解釈負荷</td><td>No</td></tr>
+<tr><td>charge, mass</td><td>float</td><td>介入粒子としての性質</td><td>No</td></tr>
+</table>
+<h3>6.2 EdgeState</h3>
+<table>
+<tr><th>項目</th><th>型</th><th>意味</th><th>必須</th></tr>
+<tr><td>src, dst, W</td><td>識別子 / 四元数</td><td>既存 v1.4.1 と同じ</td><td>Yes</td></tr>
+<tr><td>length, L_A, L_B, delta_topo, delta_op, gauge_dist</td><td>float</td><td>既存の構造差・演算子差・歪み</td><td>No</td></tr>
+<tr><td>normative_barrier</td><td>float</td><td>規範的障壁</td><td>No</td></tr>
+<tr><td>cognitive_barrier</td><td>float</td><td>認知的障壁</td><td>No</td></tr>
+<tr><td>affordance_gain</td><td>float</td><td>当該エッジが行為可能性を増減させる量</td><td>No</td></tr>
+<tr><td>affordance_alignment</td><td>float</td><td>伝達される意図と受け手の解釈整合</td><td>No</td></tr>
+</table>
+</div><div class="ext-card">
+<h2><span class="ext-section-num">7</span> 推論順序（Agent Knowledge 用）</h2>
+<p>v1.4.1 の推論順序を保ちつつ、A 層を追加した場合の統一順序は以下とする。</p>
+<table>
+<tr><th>順序</th><th>処理</th><th>説明</th></tr>
+<tr><td>1</td><td>入力の分解</td><td>観測変数 / 潜在変数 / 不足変数に分ける</td></tr>
+<tr><td>2</td><td>構造写像</td><td>ノード・リンク・場・境界・レジームへ写像する</td></tr>
+<tr><td>3</td><td>基礎量計算</td><td>S, D, H, F, 𝓣 を計算する</td></tr>
+<tr><td>4</td><td>意味場計算</td><td>q, W, semantic residual, gauge distortion を計算する</td></tr>
+<tr><td>5</td><td>A 層計算</td><td>salience / feasibility / legitimacy / reward / mutuality / cost から A を計算する</td></tr>
+<tr><td>6</td><td>伝播診断</td><td>\(\phi\), \(\phi_A\), E_struct, E_aff, E_total, speed, alpha を計算する</td></tr>
+<tr><td>7</td><td>介入設計</td><td>実効ハミルトニアンと force から介入方向を推定する</td></tr>
+<tr><td>8</td><td>優先順位化</td><td>低 A / 高壁 / 高コストのノードを優先介入候補とする</td></tr>
+</table>
+</div><div class="ext-card">
+<h2><span class="ext-section-num">8</span> 観測データへの落とし方</h2>
+<h3>8.1 店舗・施設</h3>
+<table>
+<tr><th>成分</th><th>代理指標</th></tr>
+<tr><td>Salience</td><td>サイン視認率、導線視認性、入口認知率</td></tr>
+<tr><td>Feasibility</td><td>ゾーン進入率、迷い行動の少なさ、回遊完遂率</td></tr>
+<tr><td>Legitimacy</td><td>入りづらさアンケート、混雑回避率、滞留のしやすさ</td></tr>
+<tr><td>Reward</td><td>立寄後購買率、再来訪率、滞留延伸率</td></tr>
+<tr><td>Mutuality</td><td>スタッフ接触後の反応率、同伴者遷移率</td></tr>
+<tr><td>Cognitive Cost</td><td>迷走率、戻り行動、問い合わせ頻度</td></tr>
+</table>
+<h3>8.2 組織</h3>
+<table>
+<tr><th>成分</th><th>代理指標</th></tr>
+<tr><td>Salience</td><td>施策認知率、会議アジェンダ明確性、情報到達率</td></tr>
+<tr><td>Feasibility</td><td>権限明瞭性、稟議負荷、実行時間余力</td></tr>
+<tr><td>Legitimacy</td><td>心理的安全性、提案採択率、反対コスト</td></tr>
+<tr><td>Reward</td><td>評価反映、KPI 寄与、自律感</td></tr>
+<tr><td>Mutuality</td><td>他部門応答率、巻き込み率、横断相談率</td></tr>
+<tr><td>Cognitive Cost</td><td>会議・調整工数、説明複雑度、暗黙ルールの多さ</td></tr>
+</table>
+<h3>8.3 都市・公共空間</h3>
+<table>
+<tr><th>成分</th><th>代理指標</th></tr>
+<tr><td>Salience</td><td>視認性、照度、ランドマーク性</td></tr>
+<tr><td>Feasibility</td><td>歩行しやすさ、段差、アクセス容易性</td></tr>
+<tr><td>Legitimacy</td><td>滞留許容感、安全感、居心地</td></tr>
+<tr><td>Reward</td><td>滞在便益、交流誘発、イベント転換率</td></tr>
+<tr><td>Mutuality</td><td>他者存在の安心、交流応答、共同行為の見込み</td></tr>
+<tr><td>Cognitive Cost</td><td>迷いやすさ、不安、騒音、情報過多</td></tr>
+</table>
+</div><div class="ext-card">
+<h2><span class="ext-section-num">9</span> 解釈ルール</h2>
+<div class="ext-grid-2">
+<div class="ext-insight-box">
+<p><strong>A が低い場合</strong></p>
+<ul>
+<li>行為は制度上可能でも実行されない</li>
+<li>施策提案が「正しいのに刺さらない」</li>
+<li>相転移前の沈黙・鈍化の指標になる</li>
+</ul>
+</div>
+<div class="ext-success-box">
+<p><strong>A が高い場合</strong></p>
+<ul>
+<li>主体は小さな介入でも動きやすい</li>
+<li>構造改革の実装可能性が高い</li>
+<li>行動の連鎖が伝播しやすい</li>
+</ul>
+</div>
+</div>
+<p>とくに社会科学系では、<strong>「売上や人数はまだ崩れていないが A が下がっている」</strong> 状態が重要である。これは、構造崩壊の前段階として、主体の行為可能性が先に失われていることを意味する。</p>
+</div><div class="ext-card">
+<h2><span class="ext-section-num">10</span> 相転移予兆の再定義</h2>
+<h3>10.1 悪い相転移の予兆</h3>
+<div class="ext-math">\[
+    \Delta A &lt; 0,\quad \Delta H &lt; 0,\quad \mathrm{Var}(D) \uparrow,\quad \mathcal{T} \uparrow
+  \]<div class="math-fallback">Formula: \Delta A < 0,\quad \Delta H < 0,\quad \mathrm{Var}(D) \uparrow,\quad \mathcal{T} \uparrow</div></div>
+<p>認知的な“やれそう感”が先に失われ、次いで持続性が落ち、構造揺らぎと摩擦が増す。この順序は、組織疲弊や施設体験劣化に対して有効な早期警戒指標となる。</p>
+<h3>10.2 良い相転移の兆候</h3>
+<div class="ext-math">\[
+    \Delta A &gt; 0,\quad H \text{ stable or rising},\quad \mathcal{T} \downarrow,\quad F \uparrow
+  \]<div class="math-fallback">Formula: \Delta A > 0,\quad H \text{ stable or rising},\quad \mathcal{T} \downarrow,\quad F \uparrow</div></div>
+<p>場の構造改善だけでなく、「やってみよう」と感じる主体が増えることで、自律的な連鎖が起き始める。</p>
+</div><div class="ext-card">
+<h2><span class="ext-section-num">11</span> 実装ポリシー</h2>
+<ul>
+<li>既存の q・W・semantic residual・Gauge・Maxwell・Hamiltonian を保持する。</li>
+<li>A はまずスカラー場として追加し、将来的に q_state の成分へ再統合可能とする。</li>
+<li>観測可能な代理指標を優先し、心理概念の直書きは避ける。</li>
+<li>観測値と推定値を明確に分ける。</li>
+<li>レポートでは、低 A の原因を Salience / Feasibility / Legitimacy / Reward / Mutuality / Cost のどれに帰着するかを書き分ける。</li>
+</ul>
+<pre><code># Minimal extension policy
+# 1. Preserve SDFT v1.4.1 backbone.
+# 2. Add A, phi_A, behavior_p at node level.
+# 3. Add normative_barrier, cognitive_barrier, affordance_gain at edge level.
+# 4. Use effective Hamiltonian with phi_total = phi + gamma_A * phi_A.
+# 5. Rank intervention by low A / high barrier / high cognitive burden.</code></pre>
+</div><div class="ext-card">
+<h2><span class="ext-section-num">12</span> ユースケース別の要約</h2>
+<table>
+<tr><th>領域</th><th>既存 SDFT の効きどころ</th><th>SDFT-A で増えるもの</th></tr>
+<tr><td>小売・大型施設</td><td>回遊構造、混雑、伝播摩擦、配置最適化</td><td>入りやすさ、立ち寄りやすさ、迷いにくさ、買いたくなる導線</td></tr>
+<tr><td>組織</td><td>サイロ壁、意味壁、構造歪み、介入方向</td><td>言い出しやすさ、実行しやすさ、正当感、提案の発火率</td></tr>
+<tr><td>都市・公共空間</td><td>動線、滞留、空間負荷、危険予兆</td><td>安心して歩けるか、居てもよいか、交流が立ち上がるか</td></tr>
+</table>
+</div><div class="ext-card">
+<h2><span class="ext-section-num">13</span> 今後の拡張</h2>
+<p>v0.1 は A をスカラー場として導入する最小仕様である。次段では、以下の拡張が考えられる。</p>
+<ul>
+<li><strong>SDFT-AN</strong>：Normativity（正当性場）を A から独立させる</li>
+<li><strong>SDFT-AQ</strong>：A を四元数意味場へ埋め込み、感情価・正当性・行動準備性を方向成分として扱う</li>
+<li><strong>SDFT-AP</strong>：主体ごとの prior / expectation を入れ、能動的推論に近づける</li>
+</ul>
+<div class="ext-success-box">
+    本書の結論は単純である。社会科学において不足していた「場」とは、単なる物理配置ではなく、<strong>何ができると感じられるかの分布</strong> である。SDFT-A はそれを A として明示し、SDFT に行動変容の媒介層を与える。
+  </div>
+</div><div class="ext-card">
+<h2><span class="ext-section-num">14</span> 更新ログ</h2>
+<table>
+<tr><th>Version</th><th>内容</th><th>日付</th></tr>
+<tr><td>SDFT Unified v1.4.1</td><td>Gauge / Maxwell / Hamiltonian / Agent bundle</td><td>2026-03-25</td></tr>
+<tr><td>SDFT-A v0.1</td><td>Affordance layer, cognitive-normative mediation, behavior-oriented intervention</td><td>2026-04-07</td></tr>
+</table>
+</div><div class="footer">
+<p>本資料は SDFT Unified v1.4.1 に対する拡張仕様書であり、理論の整合性と実装可能性を両立するための設計文書である。</p>
+</div></div></section></main>
 </div>
 <!-- Scroll to top button -->
 <button class="scroll-to-top" id="scrollToTopBtn" onclick="scrollToTop()"></button>
@@ -5216,14 +5630,28 @@ if __name__ == "__main__":
         // MathJax configuration
         window.MathJax = {
             tex: {
-                inlineMath: [['\\(', '\\)']],
-                displayMath: [['\\[', '\\]']],
+                inlineMath: [['\(', '\)']],
+                displayMath: [['\[', '\]']],
                 processEscapes: true
             },
             svg: {
                 fontCache: 'global'
+            },
+            startup: {
+                pageReady: () => {
+                    return MathJax.startup.defaultPageReady().then(() => {
+                        document.documentElement.classList.add('mathjax-ready');
+                    });
+                }
             }
         };
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                if (!document.documentElement.classList.contains('mathjax-ready')) {
+                    document.documentElement.classList.add('mathjax-fallback');
+                }
+            }, 2500);
+        });
     </script>
 </body>
 </html>

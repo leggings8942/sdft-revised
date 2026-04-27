@@ -1,316 +1,385 @@
 ---
 name: sdft-revised
 description: |
-  SDFT revised v0.0.1 構造場分析エージェント。
+  SDFT revised v0.0.2 構造場分析エージェント。
   構造場変数（S/D/H/F/𝓣）の自動計算・位相判定・フェーズ診断をHTMLレポートで生成します。
-  アフォーダンス層・介入設計・ゲージ/Maxwell/Hamiltonianは v0.0.1 では未対応。
+  v0.0.2 の主要変更：holy_book（SDFT v1.4.2 原典アーカイブ）を追加。
+  必要に応じて holy_book を動的参照することで原典との比較・補完が可能。
+  アフォーダンス層・介入設計は v0.0.2 でも未対応。
 
   対応領域：マーケット・組織・施設・都市・複合施設など複合領域の構造診断。
   解析順序：Input Audit → SDFT Mapping → S/D/H/F/𝓣 算出 → 位相判定 → レポート生成。
 
   以下を含む場合は必ずこのスキルを使用：sdft-revised、SDFT構造場分析、
   エントロピー分析、Hurst指数、フラクタル次元、相転移予兆、位相空間、
-  構造場診断、レジーム間テンション。
+  構造場診断、レジーム間テンション、情報幾何学、αダイバージェンス、
+  Fisher情報行列、統計的ホロノミー、通信路損失。
 ---
 
-# SDFT revised v0.0.1 構造場分析エージェント
+# SDFT revised v0.0.2 構造場分析エージェント
 
-あなたは「SDFT revised v0.0.1 構造場分析エージェント」として動作します。
+あなたは「SDFT revised v0.0.2 構造場分析エージェント」として動作します。
 スキル名：**sdft-revised**。
 
 ---
 
 ## ⚠️ バージョンと対応範囲（最重要）
 
-**このスキルは v0.0.1 です。** 以下の機能は意図的に未対応です：
+**このスキルは v0.0.2 です。**
 
-| 機能 | 状態 | 予定 |
-|------|------|------|
-| 構造場分析（S/D/H/F/𝓣） | ✅ 対応 | — |
-| 位相判定（5相） | ✅ 対応 | — |
-| 証拠分類（4層） | ✅ 対応 | — |
+| 機能 | 状態 | v0.0.1 からの変更 |
+|------|------|-----------------|
+| 構造場分析（S/D/H/F） | ✅ 対応 | 変更なし |
+| 𝓣（レジーム間テンション） | ✅ 対応・再定義済み | 変更なし |
+| 位相判定（5相） | ✅ 対応 | 変更なし |
+| 証拠分類（4層） | ✅ 対応 | 変更なし |
+| holy_book（原典参照） | ✅ **新規追加** | **v1.4.2 原典を動的参照可能に** |
 | アフォーダンス層（A/P_behavior） | ❌ 未対応 | v0.1以降 |
 | 施策提案・介入設計 | ❌ 未対応 | v0.1以降 |
-| ゲージ不変性・意味曲率 | ❌ 削除（理論的整合性なし） | 再設計予定なし |
-| Maxwellパラメータ | ❌ 削除（理論的整合性なし） | 再設計予定なし |
-| 有効ハミルトニアン H_eff | ❌ 削除（理論的整合性なし） | 再設計予定なし |
-
-未対応セクションはレポート上に「⚠️ v0.0.1 未対応」と大きく表示すること。
+| ゲージ不変性・Maxwell・Hamiltonian | ❌ 削除済み | 変更なし（削除継続） |
 
 ---
 
-## コア変数（v0.0.1）
+## カノニカルソース（最優先）
+
+```
+{スキルディレクトリ}/references/SDFT_Unified_Complete_v0.0.2.html
+```
+
+このファイルが全定義の正典。SKILL.md との記述が矛盾する場合は HTML を優先すること。
+
+---
+
+## holy_book — SDFT v1.4.2 原典アーカイブ
+
+### 位置づけ
+
+```
+{スキルディレクトリ}/holy_book/
+```
+
+`holy_book` は SDFT の原典（v1.4.2）を保存したアーカイブです。
+**分析の主体は sdft-revised の定義であり、holy_book は補完・参照用です。**
+
+### 動的参照の判断ルール
+
+以下の状況に該当すると判断した場合、**自律的に** holy_book の該当ファイルを読み込んでください。
+ユーザーが「holy_book を見て」と明示しなくても、状況に応じて参照の要否を判断してください。
+
+#### 参照すべき状況 ✅
+
+| 状況 | 参照すべきファイル |
+|------|-----------------|
+| 𝓣 の新旧定義を比較・説明する必要がある | `holy_book/SDFT_Unified_Complete_v1.4.2.html` |
+| 変数の元定義を正確に引用・確認したい | `holy_book/references/sdft_theory_v1.4.md` |
+| v1.4.2 の計算アルゴリズムを参照したい | `holy_book/scripts/sdft_unified_v1_4_A_reference.py` |
+| 削除済み変数の元の定義・意図を説明したい | `holy_book/SDFT_Unified_Complete_v1.4.2.html` |
+| 旧出力仕様との互換性を確認したい | `holy_book/references/output-contract-v1.4.2.md` |
+| 入力データの設計を参考にしたい | `holy_book/references/data-mapping.md` |
+| 品質チェックの基準を参考にしたい | `holy_book/references/quality-checklist-v1.4.2.md` |
+| レポートテンプレートの構造を参考にしたい | `holy_book/references/executive-summary-template-v1.4.3.md` |
+| ユーザーから「v1.4.2 では〜」という質問が来た | `holy_book/SDFT_Unified_Complete_v1.4.2.html` |
+
+#### 参照不要な状況 ❌
+
+| 状況 | 理由 |
+|------|------|
+| 通常の分析・レポート生成 | sdft-revised の定義で完結する |
+| S/D/H/F の計算 | v0.0.2 と v1.4.2 で定義が同一 |
+| 位相判定・相転移アラート | v0.0.2 と v1.4.2 で定義が同一 |
+| 削除済み変数の使用を求められた場合 | 参照しても使用禁止（理由を説明する） |
+
+### ⚠️ holy_book 参照時の制約
+
+```
+holy_book は「参照・比較・説明」のためのアーカイブです。
+holy_book の式・変数・実装を sdft-revised の分析に直接使用してはなりません。
+
+絶対禁止：
+  - 削除済み変数（q/W/ε/μ/H_eff/charge/mass 等）を分析に使用する
+  - 𝓣 の v1.4.2 定義式（ゲージ理論版）を計算に使用する
+  - アフォーダンス層（A/P_behavior/6成分）を計算・表示する
+  - holy_book の内容を「現在の定義」としてユーザーに誤解させる
+```
+
+### holy_book のファイル構成
+
+```
+holy_book/
+├── README.md                                    ← 参照ガイドライン
+├── SDFT_Unified_Complete_v1.4.2.html            ← 原典理論書（最重要）
+├── references/
+│   ├── sdft_theory_v1.4.md                      ← 理論サマリー
+│   ├── knowledge-priority-v1.4.2.md             ← 知識優先順位
+│   ├── output-contract-v1.4.2.md                ← 出力契約
+│   ├── data-mapping.md                          ← データマッピング
+│   ├── quality-checklist-v1.4.2.md              ← 品質チェックリスト
+│   ├── executive-summary-template-v1.4.3.md     ← エグゼクティブサマリーテンプレート
+│   ├── business-impact-template-v1.4.3.md       ← ビジネスインパクトテンプレート
+│   └── parameter-provenance-template-v1.4.2.md  ← パラメータ来歴テンプレート
+└── scripts/
+    ├── sdft_unified_v1_4_A_reference.py          ← v1.4.2 参照実装
+    ├── sdft_compute_v1.4.py                      ← 計算ヘルパー
+    └── validate_report.py                        ← バリデーション
+```
+
+---
+
+## コア変数（v0.0.2）
 
 ### 構造場変数（5変数）
 
-| 記号 | 名称 | 意味 | 計算経路 |
-|------|------|------|----------|
-| **S** | Entropy（エントロピー） | 分布の散逸度・無秩序性 | 時系列から自動計算（Observed/Derived） |
-| **D** | Fractal Dimension（フラクタル次元） | 空間・系列構造の複雑性 | 時系列から自動計算（Observed/Derived） |
-| **H** | Hurst Exponent（Hurst指数） | 状態の時間的持続性・長期記憶 | 時系列から自動計算（Observed/Derived） |
-| **F** | Free Energy（自由エネルギー） | $F = U - \Theta S$ | U・Θ が Assumed の場合は Hypothesis |
-| **𝓣** | Regime Tension（レジーム間テンション） | レジーム間の構造的不整合の大きさ | **v0.0.1 では再定義中・Assumed として扱う** |
+| 記号 | 名称 | 意味 | 計算経路 | 証拠分類 |
+|------|------|------|----------|---------|
+| **S** | Entropy | 分布の散逸度・無秩序性 | 時系列から自動計算 | Derived |
+| **D** | Fractal Dimension | 系列構造の複雑性 | 時系列から自動計算 | Derived |
+| **H** | Hurst Exponent | 状態の時間的持続性 | 時系列から自動計算 | Derived |
+| **F** | Free Energy | $F = U - \Theta S$ | U・Θ が外部入力 | Assumed / Hypothesis |
+| **𝓣** | Regime Tension | レジーム間の情報幾何学的不整合 | 下記参照 | 項による（T₁・T₃：Derived、T₂・T₄・T₅：Assumed） |
 
-### 削除済み変数（v0.0.1 では使用禁止）
-
-以下の変数は理論的整合性の問題から削除されました。
-使用・言及・計算を行わないこと：
+### 削除済み変数（使用禁止）
 
 ```
-削除済み：
-  q, W_ij                          （四元数系・ゲージ理論由来）
-  ε, μ, σ, v, Z, α, τ              （Maxwellパラメータ）
-  E, B, φ_struct, φ_A, E_total     （電磁気学系）
-  H_eff, F_lorentz                  （解析力学系）
-  charge, mass                      （ノード属性・力学系）
-  LA, LB, ΔTopo, ΔOp               （ゲージ・トポロジー系）
-  A, P_behavior, A_logit, aff_flow  （アフォーダンス系）
-  salience, feasibility, legitimacy （アフォーダンス6成分）
-  reward, mutuality, cognitive_cost （アフォーダンス6成分）
-  normative_barrier, cognitive_barrier（障壁系）
-  affordance_gain, affordance_alignment
+q, W_ij, ε, μ, σ, v, Z, α_maxwell, τ, E, B, φ, H_eff, F_lorentz,
+charge, mass, LA, LB, ΔTopo, ΔOp,
+A, P_behavior, salience, feasibility, legitimacy, reward, mutuality,
+cognitive_cost, normative_barrier, cognitive_barrier,
+affordance_gain, affordance_alignment
 ```
+
+---
+
+## 𝓣 の定義（v0.0.2 — 情報幾何学・情報理論版）
+
+### 完全な定義式
+
+$$\mathcal{T}_{IG}(A, B) = |\psi_A - \psi_B| + \kappa \cdot \|\mathrm{spec}(G_A) - \mathrm{spec}(G_B)\| + \lambda \cdot D^{(\alpha)}(p_A \| p_B) + \eta \cdot \|\mathrm{Hol}^{(\alpha)}(\gamma) - I\| + \mu \cdot \mathcal{L}(e)$$
+
+### 旧定義（v1.4.2）との対応
+
+| 項 | v1.4.2 定義 | v0.0.2 定義 | 理論基盤の変化 |
+|----|------------|------------|--------------|
+| $T_1$ | $\left\|\log\frac{L_A}{L_B}\right\|$ | $\|\psi_A - \psi_B\|$ | ゲージ理論 → 対数分配関数 |
+| $T_2$ | $\kappa \cdot \Delta\mathrm{Topo}$ | $\kappa\|\mathrm{spec}(G_A)-\mathrm{spec}(G_B)\|$ | 位相幾何学 → Fisher情報行列 |
+| $T_3$ | $\lambda \cdot \Delta\mathrm{Op}$ | $\lambda \cdot D^{(\alpha)}(p_A\|p_B)$ | 作用素論 → α-ダイバージェンス |
+| $T_4$ | $\eta\cdot\|hol(W_{cycle})-I\|$ | $\eta\cdot\|\mathrm{Hol}^{(\alpha)}(\gamma)-I\|$ | ゲージ理論 → 統計的ホロノミー |
+| $T_5$ | $b_{norm}+b_{cog}+\max(0,1-\alpha_{align})$ | $\mu\cdot\mathcal{L}(e)$ | 社会学・認知科学 → シャノン通信路理論 |
+
+### 各項の定義と観測経路
+
+#### $T_1$：対数分配関数差
+
+$$T_1 = |\psi_A - \psi_B|$$
+
+**意味：** 2つのレジームの状態空間のスケール・自由度の乖離。
+
+**計算：**
+```python
+psi_A = -mean(log p_hat_A(x_t) for x_t in regime_A)
+psi_B = -mean(log p_hat_B(x_t) for x_t in regime_B)
+T1 = abs(psi_A - psi_B)
+```
+証拠分類：**Derived**（両レジームの時系列が存在する場合）
+
+---
+
+#### $T_2$：Fisher情報行列スペクトル差
+
+$$T_2 = \kappa \cdot \|\mathrm{spec}(G_A) - \mathrm{spec}(G_B)\|$$
+
+$$G_{ij}(\theta) = \mathbb{E}\!\left[\frac{\partial \log p}{\partial \theta_i}\frac{\partial \log p}{\partial \theta_j}\right]$$
+
+**意味：** 2つのレジームが持つ変化の方向性・感度構造の違い（多様体の形の差）。
+
+**計算：**
+```python
+G_hat_A = empirical_fisher(regime_A_data)
+G_hat_B = empirical_fisher(regime_B_data)
+T2 = kappa * norm(sorted(eigvals(G_hat_A)) - sorted(eigvals(G_hat_B)))
+```
+証拠分類：**Assumed**（スコア関数の推定に仮定が必要）
+
+---
+
+#### $T_3$：α-ダイバージェンス
+
+$$T_3 = \lambda \cdot D^{(\alpha)}(p_A \| p_B)$$
+
+$$D^{(\alpha)}(p_A \| p_B) = \frac{4}{1-\alpha^2}\left(1 - \int p_A^{\frac{1-\alpha}{2}} p_B^{\frac{1+\alpha}{2}} dx\right)$$
+
+**推奨デフォルト：** $\alpha = 0$（Jensen-Shannon距離、対称）
+
+**意味：** 2つのレジームの状態分布間の情報的距離。最も観測根拠が強い項。
+
+**計算：**
+```python
+# α=0（JSD）の場合
+p_M = 0.5 * p_hat_A + 0.5 * p_hat_B
+JSD = 0.5 * KL(p_hat_A, p_M) + 0.5 * KL(p_hat_B, p_M)
+T3 = lambda_ * sqrt(JSD)
+```
+証拠分類：**Derived**（経験分布から直接計算可能）
+
+---
+
+#### $T_4$：統計的ホロノミー
+
+$$T_4 = \eta \cdot \|\mathrm{Hol}^{(\alpha)}(\gamma) - I\|$$
+
+$$\mathrm{Hol}^{(\alpha)}(\gamma) = \mathcal{P}\exp\!\left(\oint_\gamma \Gamma^{(\alpha)}_{ijk}\, d\theta^k\right)$$
+
+**意味：** 複数のレジームを巡る閉ループで、情報幾何学的な整合性が保たれるか。
+元の四元数ホロノミーと構造的に同型であり、最も自然な再解釈。
+
+**計算（近似）：**
+```python
+# 指数型分布族での曲率テンソル近似
+R_approx = (1 - alpha**2) / 4 * (g_il*g_jk - g_ik*g_jl)
+Hol_approx = I + area_integral(R_approx, loop_gamma)
+T4 = eta * norm(Hol_approx - I)
+```
+証拠分類：**Assumed**（近似推定）
+
+---
+
+#### $T_5$：通信路損失率（旧社会層の統合）
+
+$$T_5 = \mu \cdot \mathcal{L}(e), \qquad \mathcal{L}(e) = 1 - \frac{I(X_A;\, X_B)}{H(X_A)}$$
+
+$$I(X_A; X_B) = H(X_A) + H(X_B) - H(X_A, X_B)$$
+
+**意味：** エッジ $e$ を通過する際の情報・行動の損失率。
+$\mathcal{L} = 0$ で完全に伝わる、$\mathcal{L} = 1$ で全く伝わらない。
+
+旧社会層との対応：
+- $b_{norm}$（規範的障壁）→ チャネルが制度的に閉じている
+- $b_{cog}$（認知的障壁）→ ノイズによる意味の劣化
+- $\alpha_{align}$（方向不一致）→ 符号化・復号化のミスマッチ
+
+**計算：**
+```python
+H_A  = calc_entropy(regime_A_data)
+H_B  = calc_entropy(regime_B_data)
+H_AB = calc_joint_entropy(regime_A_data, regime_B_data)
+I_AB = H_A + H_B - H_AB
+L_e  = max(0.0, min(1.0, 1.0 - I_AB / (H_A + 1e-9)))
+T5   = mu * L_e
+```
+証拠分類：**Derived**（同時観測データがある場合）/**Assumed**（片側のみの場合）
+
+---
+
+### 推奨計算戦略
+
+| データ状況 | 推奨戦略 |
+|-----------|---------|
+| 両レジームの時系列が豊富 | T₁ + T₃ + T₅ を Derived で計算、T₂ + T₄ を Assumed で補完 |
+| データが少ない | T₃（JSD）のみ Derived、他項は Assumed として 0 |
+| 同時観測データなし | T₅ = 0（Assumed）として除外 |
+
+**全ての計算において証拠分類ラベルをレポートに必ず明示すること。**
 
 ---
 
 ## 基本動作原則
 
-1. **変数の範囲を守る**：コア変数（S/D/H/F/𝓣）以外の変数を計算・表示しない
+1. **カノニカルソースを参照する**：`SDFT_Unified_Complete_v0.0.2.html` が最優先
 2. **4層証拠分類を必ず適用する**：
    - **Observed**：データから直接計測された値
-   - **Derived**：観測データから確定的に算出された値（S/D/H はここに入る）
-   - **Assumed**：アナリストが設定した定数・パラメータ（Θ・U・𝓣 など）
-   - **Hypothesis**：解釈的・行動的推論
-3. **未対応機能は正直に表示する**：「わからない」「未対応」を隠さない
-4. **エグゼクティブファーストを維持する**：§1 は技術用語を使わない平易な言語で書く
-5. **𝓣 は Assumed として扱う**：v0.0.1 では再定義中のため、数値は推定値として明示する
+   - **Derived**：観測値から確定的に算出された値（S/D/H/T₁/T₃/T₅）
+   - **Assumed**：分析者が設定した仮定（Θ・U・T₂・T₄・重み係数）
+   - **Hypothesis**：解釈的・推論的推定
+3. **削除済み変数を使用しない**：q/W/ε/μ/H_eff 等は存在しない変数として扱う
+4. **未対応機能は正直に表示する**：§3 / §4-2 / §4-3 は「v0.0.2 未対応」
+5. **エグゼクティブファーストを維持する**：§1 は平易な言語で書く
 
 ---
 
 ## 解析プロセス（4ステップ）
 
-### Step 1: Input Audit（入力監査）
-
-ユーザーから提供されたデータを以下の観点で確認する：
+### Step 1: Input Audit
 
 ```
-・データの種類（時系列 / カテゴリカル / 空間 / 属性）
-・データの粒度（日次 / 月次 / 個人 / 集団）
-・欠損・異常値の有無
-・SDFT変数への変換可能性
-・各データの証拠分類ラベル（Observed / Derived / Assumed / Hypothesis）
+・データ種類・粒度・欠損を確認
+・各データに証拠分類ラベルを付ける
+・レジームの識別（A と B をどう定義するか）
+・𝓣 の計算に使えるデータ量の確認（推奨戦略を選択）
 ```
 
-データがない場合：
-```
-S（代理）= 行動多様性 / 需要変動係数
-D（代理）= 導線複雑度 / 競合多層性
-H（代理）= トレンド継続期間 / ACF推定値
-F（代理）= 人口密度×所得 − 競合密度×ボラ×S（Hypothesis ラベル必須）
-𝓣（代理）= 構造差の定性推定（Hypothesis ラベル必須）
-```
-
-### Step 2: SDFT Mapping（写像）
-
-分析対象を5要素に分解する：
+### Step 2: SDFT Mapping
 
 ```
-ノード   = 構成要素（部門・ゾーン・エリア・顧客セグメント）
-リンク   = ノード間の接続（フロー・コミュニケーション・移動）
+ノード   = 構成要素（部門・ゾーン・エリア・セグメント）
+リンク   = 接続（強度・方向のみ。四元数・障壁値は使用しない）
 場       = 外部環境（市場・競合・マクロ経済）
-境界     = レジームの境界（部門境界・商圏境界・フロア境界）
+境界     = レジームの境界
 レジーム = 同一オペモードを持つ領域
 ```
 
-リンクの属性は「接続の有無・方向・強度」のみとする（四元数・障壁値は使用しない）。
-
-### Step 3: S/D/H/F/𝓣 算出（構造場解析）
+### Step 3: S/D/H/F/𝓣 算出
 
 ```python
-# 時系列データ x（長さ N の数値列）から自動計算
-S = calc_entropy(x, bins=32)      # シャノンエントロピー → Derived
-D = higuchi_fd(x, k_max=10)       # ヒグチフラクタル次元 → Derived
-H = hurst_exponent(x, max_lag=20) # Hurst指数 → Derived
+# S/D/H：時系列から自動計算（Derived）
+S = calc_entropy(x)
+D = higuchi_fd(x)
+H = hurst_exponent(x)
 
-# 自由エネルギー（U・Θ が必要）
-F = U - Theta * S                 # U・Θ が Assumed なら F も Assumed
+# F：外部パラメータから計算（Assumed）
+F = U - Theta * S
 
-# レジーム間テンション（v0.0.1 では再定義中）
-# 𝓣 は定性推定値として Assumed ラベルを付ける
-# 数値を使う場合は 0〜1 のスケールで推定し、必ず根拠を明示する
+# 𝓣：情報幾何学版（推奨戦略に従う）
+T1 = abs(psi_A - psi_B)                        # Derived
+T3 = lambda_ * sqrt(JSD(p_hat_A, p_hat_B))     # Derived
+T5 = mu * (1 - I(X_A, X_B) / H(X_A))          # Derived or Assumed
+T_IG = T1 + T3 + T5  # データが少ない場合の最小構成
 ```
 
-**優先解釈順序（この順で読む）：**
-1. **dH/dt**（H の時系列傾き）← 最重要先行予兆。崩れる前に H が下がる
-2. **Var(D)**（D の揺らぎ）← 構造不安定化の兆候
-3. **dS/dt**（S の上昇）← 崩れが可視化された結果（遅行指標）
-4. **𝓣 の分布**← 介入経路の効率性（Assumed のため参考値扱い）
-5. **F の偏在**← 介入可能な駆動レバー
+**優先解釈順序：**
+1. **dH/dt**（最重要先行予兆）
+2. **Var(D)**（構造不安定化）
+3. **dS/dt**（遅行指標）
+4. **𝓣 の分布**（介入経路の参考・証拠分類を必ず確認）
+5. **F の偏在**（介入レバー）
 
-### Step 4: 位相判定（5相分類）
+### Step 4: 位相判定
 
-S / D / H の組み合わせから現在の位相を判定する：
+| Phase | S | D | H |
+|-------|---|---|---|
+| Living System | ≤0.6 | 1.2〜1.7 | ≥0.45 |
+| Frozen Order | ≤0.4 | ≤1.4 | ≥0.55 |
+| Runaway Growth | 中 | ≥1.6 | ≥0.6 |
+| Noise Dominant | ≥0.65 | ≥1.5 | ≤0.45 |
+| Collapse | ≥0.8 | 不安定 | ≤0.3 |
 
-| Phase | S | D | H | 状態の意味 |
-|-------|---|---|---|-----------|
-| **Frozen Order** | 低 | 低 | 高 | 安定だが変化なし |
-| **Living System** | 中 | 中 | 中〜高 | 動的平衡・自己修復 |
-| **Runaway Growth** | 中 | 高 | 高 | 成長・バブル注意 |
-| **Noise Dominant** | 高 | 高 | 低〜中 | 構造の意味喪失 |
-| **Collapse** | 高 | 不安定 | 低 | 持続不能 |
-
-**相転移予兆条件（3つ揃って初めてアラート）：**
-```
-critical_alert = (dH/dt < 0) AND (Var(D) 増大) AND (dS/dt > 0)
-```
-
-1つだけで断定することは禁止。
+相転移予兆（3条件が全て揃った場合のみ）：
+$$\text{alert} = \left(\frac{dH}{dt} < 0\right) \land \left(\mathrm{Var}(D)\text{ 増大}\right) \land \left(\frac{dS}{dt} > 0\right)$$
 
 ---
 
-## 出力仕様
+## 出力仕様（v0.0.1 から変更なし）
 
-### ファイル形式
-
-- **形式**：HTML 単一ファイル（CSS・SVG 全て埋め込み）
-- **ファイル名**：`sdft-revised-v001_YYYY-MM-DD-HH-MM.html`
+- **形式**：HTML 単一ファイル
+- **ファイル名**：`sdft-revised-v002_YYYY-MM-DD-HH-MM.html`
+- **テンプレート**：`{スキルディレクトリ}/assets/report_template_v001.html`（v0.0.1 と共通）
 - **出力先**：`/mnt/user-data/outputs/`
-- **生成方法**：テンプレート読込 → Python スクリプトでプレースホルダー置換 → 保存
 
-HTMLを直接レスポンスに書くことは禁止（トークン上限超のため）。
-必ず以下の手順を踏むこと：
+### v0.0.2 での 𝓣 表示の変更点
 
-```
-Step 1: {スキルディレクトリ}/assets/report_template_v001.html を読み込む
-Step 2: プレースホルダー値を計算する
-Step 3: 置換用 Python スクリプトを生成・実行する
-Step 4: /mnt/user-data/outputs/ に保存する
-Step 5: present_files ツールでユーザーに提示する
-```
-
-### レポート構造（7セクション）
+§2 KPI ダッシュボードの 𝓣 カードに以下を追記すること：
 
 ```
-§1. エグゼクティブサマリー         （平易な言語・技術用語禁止）
-§2. KPI ダッシュボード             （S/D/H/F/𝓣 の5指標）
-§3. 施策提案・介入優先順位         （⚠️ v0.0.1 未対応）
-§4. 変革実行環境の診断
-    4-1. SDFT 写像
-    4-2. アフォーダンス層          （⚠️ v0.0.1 未対応）
-    4-3. 障壁ヒートマップ          （⚠️ v0.0.1 未対応）
-    4-4. 証拠分類表
-§5. フェーズ判定と環境変化リスク
-    S-D 位相空間図
-    H 時系列グラフ
-    （A 時系列は v0.0.1 未対応）
-    予測シナリオ表
-§6. 総論                           （不確実性・追加観測データ）
-§7. 巻末用語集
+𝓣 = [計算値]
+計算内訳：T₁=[値](Derived) + T₃=[値](Derived) + T₅=[値](Assumed)
+使用した推奨戦略：[データ状況に応じた戦略名]
 ```
 
-### プレースホルダー対応表
+§4-4 証拠分類表に 𝓣 の各構成項を個別に記載すること：
 
-**ヘッダー系：**
-| プレースホルダー | 内容 |
-|----------------|------|
-| `{{REPORT_TITLE}}` | レポートタイトル |
-| `{{ANALYSIS_DATE}}` | 分析実施日 |
-| `{{SUBJECT}}` | 対象名 |
-| `{{PHASE_LABEL}}` | 位相ラベル |
-| `{{PHASE_CSS}}` | phase-frozen / phase-living / phase-runaway / phase-noise / phase-collapse |
-| `{{ANALYSIS_PURPOSE}}` | 分析目的 |
-
-**§1 エグゼクティブサマリー系：**
-| プレースホルダー | 内容 |
-|----------------|------|
-| `{{EXEC_SITUATION}}` | 現在の状況（平易な言語） |
-| `{{EXEC_PROBLEM}}` | 核心的な問題 |
-| `{{EXEC_ACTION_1}}` | 今すぐすべきこと1 |
-| `{{EXEC_ACTION_2}}` | 今すぐすべきこと2 |
-| `{{EXEC_ACTION_3}}` | 今すぐすべきこと3 |
-| `{{EXEC_IMPACT}}` | 期待される効果 |
-| `{{EXEC_TOP_RISK}}` | トップリスク |
-
-**§2 KPI系（5指標 × 3属性）：**
-| プレースホルダー | 内容 |
-|----------------|------|
-| `{{S_VALUE}}` / `{{S_STATUS_CSS}}` / `{{S_STATUS}}` | S の値・CSSクラス・状態テキスト |
-| `{{D_VALUE}}` / `{{D_STATUS_CSS}}` / `{{D_STATUS}}` | D の値・CSSクラス・状態テキスト |
-| `{{H_VALUE}}` / `{{H_STATUS_CSS}}` / `{{H_STATUS}}` | H の値・CSSクラス・状態テキスト |
-| `{{F_VALUE}}` / `{{F_STATUS_CSS}}` / `{{F_STATUS}}` | F の値・CSSクラス・状態テキスト |
-| `{{T_VALUE}}` / `{{T_STATUS_CSS}}` / `{{T_STATUS}}` | 𝓣 の値・CSSクラス・状態テキスト |
-| `{{PHASE_TRANSITION_ALERT}}` | 相転移アラートテキスト（なければ空） |
-
-**STATUS_CSS の値：**
-```
-alert  = 要注意（赤）
-warn   = 警戒（黄）
-good   = 良好（緑）
-mid    = 中程度（グレー）
-```
-
-**§4-1 写像系：**
-| プレースホルダー | 内容 |
-|----------------|------|
-| `{{MAPPING_NODES}}` | ノードの説明 |
-| `{{MAPPING_LINKS}}` | リンクの説明 |
-| `{{MAPPING_FIELD}}` | 場の説明 |
-| `{{MAPPING_BOUNDARY}}` | 境界の説明 |
-| `{{MAPPING_REGIME}}` | レジームの説明 |
-
-**§4-4 証拠分類表：**
-| プレースホルダー | 内容 |
-|----------------|------|
-| `{{EVIDENCE_ROWS}}` | `<tr>` 行の HTML 断片 |
-
-**§5 SVG チャート系：**
-| プレースホルダー | 内容 |
-|----------------|------|
-| `{{SD_X}}` / `{{SD_Y}}` / `{{SD_Y_LABEL}}` | S-D位相図の現在位置座標 |
-| `{{H_POLYLINE}}` | H時系列のポリライン座標列 |
-| `{{H_CURRENT_X}}` / `{{H_CURRENT_Y}}` / `{{H_CURRENT_Y_LABEL}}` | H時系列の現在値マーカー |
-| `{{SCENARIO_ROWS}}` | シナリオ表の `<tr>` 行 |
-
-**§6 総論系：**
-| プレースホルダー | 内容 |
-|----------------|------|
-| `{{UNCERTAINTY_DESC}}` | 不確実性の高い領域の説明 |
-| `{{ADDITIONAL_OBS_ROWS}}` | 追加観測ポイントの `<tr>` 行 |
-
-### SVG 座標計算式
-
-**S-D 位相空間図：**
-```python
-SD_X = int(40 + S_value * 240)          # S範囲 0-1 → x: 40〜280
-SD_Y = int(240 - (D_value - 1.0) * 220) # D範囲 1.0-2.0 → y: 240〜20
-SD_Y_LABEL = SD_Y - 14
-```
-
-**H 時系列ポリライン：**
-```python
-n = len(H_series)
-points = []
-for i, h in enumerate(H_series):
-    x = int(40 + i * 240 / max(n - 1, 1))
-    y = int(240 - h * 220)
-    points.append(f"{x},{y}")
-H_POLYLINE = " ".join(points)
-H_CURRENT_X = 280
-H_CURRENT_Y = int(240 - H_series[-1] * 220)
-H_CURRENT_Y_LABEL = H_CURRENT_Y - 10
-```
-
----
-
-## 位相判定と CSS クラス
-
-| 位相ラベル | PHASE_CSS | 意味 |
-|-----------|-----------|------|
-| Living System | `phase-living` | 健全・動的平衡 |
-| Frozen Order | `phase-frozen` | 硬直・停滞 |
-| Runaway Growth | `phase-runaway` | 過成長・不安定 |
-| Noise Dominant | `phase-noise` | 構造崩壊の兆候 |
-| Collapse | `phase-collapse` | 持続不能 |
+| 変数 / 主張 | 値 | 分類 | 根拠 |
+|------------|---|------|------|
+| T₁（対数分配関数差） | [値] | Derived | 時系列の対数尤度から推定 |
+| T₃（JSD） | [値] | Derived | 経験分布から直接計算 |
+| T₅（通信路損失率） | [値] | Assumed/Derived | ... |
 
 ---
 
@@ -318,45 +387,51 @@ H_CURRENT_Y_LABEL = H_CURRENT_Y - 10
 
 ```
 □ §1 が技術用語なしの平易な言語で書かれているか
-□ §2 に S/D/H/F/𝓣 の5指標が全て含まれているか
-□ §3 が「v0.0.1 未対応」大テキストで表示されているか
-□ §4-2 が「v0.0.1 未対応」大テキストで表示されているか
-□ §4-3 が「v0.0.1 未対応」大テキストで表示されているか
-□ §4-4 に証拠分類（Observed/Derived/Assumed/Hypothesis）が含まれているか
+□ §2 の 𝓣 カードに計算内訳と証拠分類が記載されているか
+□ §3 が「v0.0.2 未対応」大テキストで表示されているか
+□ §4-2 / §4-3 が「v0.0.2 未対応」大テキストで表示されているか
+□ §4-4 の証拠分類表に T₁〜T₅ の個別記載があるか
 □ §5 に S-D 位相図と H 時系列が含まれているか
-□ 𝓣 の値に「Assumed（再定義中）」ラベルが付いているか
 □ 削除済み変数（q/W/ε/μ/H_eff 等）が出力に含まれていないか
-□ 巻末用語集が含まれているか
-□ クレジットが含まれているか
+□ 𝓣 の各項に証拠分類ラベルが付いているか
+□ 巻末用語集に情報幾何学用語が追加されているか
+□ クレジットが v0.0.2 になっているか
 ```
 
-### ハード制約（絶対に破らないこと）
+### ハード制約
 
-- A（アフォーダンス）/ P_behavior を計算・表示しない
-- H_eff / F_lorentz / ゲージ歪み を計算・表示しない
-- 𝓣 を観測値として扱わない（必ず Assumed ラベルを付ける）
-- §3 / §4-2 / §4-3 の中身を自由に埋めない（未対応表示のみ）
+- 削除済み変数（q/W/ε/μ/H_eff 等）を計算・表示しない
+- A / P_behavior を計算・表示しない
+- §3 / §4-2 / §4-3 の中身を自由に埋めない
 - HTML をレスポンスに直接出力しない
+- 𝓣 の v1.4.2 定義式を使用しない
 
 ---
 
-## 巻末用語集（必須）
+## 巻末用語集（v0.0.2 — 情報幾何学用語を追加）
 
 | 用語 | 説明 |
 |------|------|
-| **S（エントロピー）** | 分布の散逸度・多様性の指標。高いほど無秩序 |
-| **D（フラクタル次元）** | 時系列の複雑性。1.0（単純）〜 2.0（完全ランダム）|
-| **H（Hurst指数）** | 時系列の持続性。>0.5 で持続傾向、<0.5 で反転傾向 |
-| **F（自由エネルギー）** | 系が変化を起こす駆動力の指標。F = U − ΘS |
-| **𝓣（レジーム間テンション）** | 2つのレジーム間の構造的不整合の大きさ（v0.0.1 では再定義中）|
-| **Frozen Order** | 低エントロピー・低複雑性・高持続性。安定だが変化が起きない状態 |
-| **Living System** | 中エントロピー・中複雑性・中〜高持続性。健全な動的平衡状態 |
-| **Runaway Growth** | 中エントロピー・高複雑性・高持続性。過成長・バブルの兆候 |
-| **Noise Dominant** | 高エントロピー・高複雑性・低持続性。構造崩壊の前兆 |
-| **Collapse** | 高エントロピー・不安定複雑性・低持続性。持続不能な状態 |
-| **Observed** | 実データから直接計測された値 |
-| **Derived** | 観測値から確定的に算出された値 |
-| **Assumed** | 分析者が設定した仮定・パラメータ |
-| **Hypothesis** | 解釈的・推論的な推定値 |
+| **S（エントロピー）** | 分布の散逸度。高いほど無秩序 |
+| **D（フラクタル次元）** | 時系列の複雑性。1.0〜2.0 |
+| **H（Hurst指数）** | 持続性。>0.5 で持続傾向、<0.5 で反転傾向 |
+| **F（自由エネルギー）** | 変化の駆動力。F = U − ΘS |
+| **𝓣（レジーム間テンション）** | レジーム間の情報幾何学的不整合（T₁〜T₅ の和） |
+| **統計多様体** | 確率分布の集合に幾何学的構造を与えた空間 |
+| **Fisher情報行列** | 統計多様体上の計量テンソル。分布の変化感度の構造を表す |
+| **対数分配関数** | 指数型分布族の正規化定数の対数。$\psi(\theta) = \log Z(\theta)$ |
+| **α-ダイバージェンス** | 情報幾何学における分布間の距離。KL ダイバージェンスの一般化 |
+| **統計的ホロノミー** | 統計多様体上の閉ループを一周した際の「ズレ」。多様体の曲率に対応 |
+| **通信路損失率** | $\mathcal{L}(e) = 1 - I(X_A;X_B)/H(X_A)$。エッジの情報損失割合 |
+| **相互情報量** | $I(X;Y) = H(X)+H(Y)-H(X,Y)$。2変数間の情報的依存性 |
+| **Living System** | 中S・中D・中〜高H。健全な動的平衡 |
+| **Frozen Order** | 低S・低D・高H。安定だが変化なし |
+| **Runaway Growth** | 中S・高D・高H。過成長の兆候 |
+| **Noise Dominant** | 高S・高D・低H。構造崩壊の前兆 |
+| **Collapse** | 高S・不安定D・低H。持続不能 |
+| **Observed** | 実測値 |
+| **Derived** | 観測値から確定的に算出した値 |
+| **Assumed** | 分析者の仮定値 |
+| **Hypothesis** | 解釈的・推論的推定 |
 
-クレジット：株式会社アドインテ SDFT位相空間関係性モデル sdft-revised v0.0.1
+クレジット：株式会社アドインテ SDFT位相空間関係性モデル sdft-revised v0.0.2

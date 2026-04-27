@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SDFT Unified Complete v0.0.2 — 理論書</title>
+<style>
+  body { font-family: "Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif; font-size:15px; line-height:1.8; color:#1a1a2e; background:#f9f9f9; margin:0; }
+  .wrap { max-width:960px; margin:0 auto; padding:40px 24px 80px; }
+  h1 { font-size:2rem; color:#1a3a5c; border-bottom:3px solid #1a3a5c; padding-bottom:12px; }
+  h2 { font-size:1.4rem; color:#1a3a5c; margin-top:48px; border-left:4px solid #1a3a5c; padding-left:12px; }
+  h3 { font-size:1.1rem; color:#2d5f8a; margin-top:32px; }
+  h4 { font-size:1rem; color:#555; margin-top:24px; }
+  p  { margin:12px 0; }
+  code { font-family:"Fira Code","Courier New",monospace; background:#f0f4f8; padding:2px 6px; border-radius:4px; font-size:0.9em; }
+  pre { background:#f0f4f8; border:1px solid #dde3ed; border-radius:8px; padding:20px; overflow-x:auto; font-size:0.88em; line-height:1.6; }
+
+  /* 数式ブロック */
+  .eq { background:#fff; border:1px solid #dde3ed; border-radius:8px; padding:20px 28px; margin:20px 0; text-align:center; font-size:1.05em; overflow-x:auto; }
+  .eq-label { font-size:0.8em; color:#888; text-align:right; margin-top:6px; }
+
+  /* 対比テーブル */
+  .compare-table { width:100%; border-collapse:collapse; margin:20px 0; font-size:0.9em; }
+  .compare-table th { background:#1a3a5c; color:#fff; padding:10px 14px; text-align:left; }
+  .compare-table td { padding:10px 14px; border-bottom:1px solid #e8ecf2; vertical-align:top; }
+  .compare-table tr:nth-child(even) td { background:#f8f9fb; }
+  .old-col { color:#c0392b; }
+  .new-col { color:#1a7a4a; }
+  .tag-old { background:#fef0ef; color:#c0392b; border:1px solid #f1948a; border-radius:4px; padding:1px 6px; font-size:0.8em; }
+  .tag-new { background:#eafaf1; color:#1a7a4a; border:1px solid #a9dfbf; border-radius:4px; padding:1px 6px; font-size:0.8em; }
+  .tag-del { background:#f5f5f5; color:#aaa; border:1px solid #ddd; border-radius:4px; padding:1px 6px; font-size:0.8em; text-decoration:line-through; }
+
+  /* 変数テーブル */
+  .var-table { width:100%; border-collapse:collapse; margin:16px 0; font-size:0.9em; }
+  .var-table th { background:#f0f4f8; color:#1a3a5c; padding:8px 12px; border:1px solid #dde3ed; }
+  .var-table td { padding:8px 12px; border:1px solid #e8ecf2; }
+
+  /* 注釈ボックス */
+  .note { background:#eaf3fb; border-left:4px solid #2d5f8a; border-radius:0 8px 8px 0; padding:14px 18px; margin:16px 0; font-size:0.92em; }
+  .warn { background:#fef9e7; border-left:4px solid #d4ac0d; border-radius:0 8px 8px 0; padding:14px 18px; margin:16px 0; font-size:0.92em; }
+  .del  { background:#fef0ef; border-left:4px solid #e74c3c; border-radius:0 8px 8px 0; padding:14px 18px; margin:16px 0; font-size:0.92em; }
+
+  /* バージョンバッジ */
+  .version-header { background:linear-gradient(135deg,#1a3a5c,#2d5f8a); color:#fff; border-radius:12px; padding:28px 36px; margin-bottom:40px; }
+  .version-header h1 { color:#fff; border-bottom:1px solid rgba(255,255,255,0.3); }
+  .version-meta { display:flex; gap:20px; flex-wrap:wrap; font-size:0.88em; opacity:0.85; margin-top:12px; }
+  .toc { background:#f8f9fb; border:1px solid #dde3ed; border-radius:8px; padding:20px 28px; margin:24px 0; }
+  .toc ol { margin:8px 0; padding-left:20px; }
+  .toc li { margin:4px 0; }
+  .toc a { color:#2d5f8a; text-decoration:none; }
+  .toc a:hover { text-decoration:underline; }
+</style>
+<!-- MathJax -->
+<script>
+MathJax = {
+  tex: { inlineMath:[['$','$'],['\\(','\\)']], displayMath:[['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags:['script','noscript','style','textarea','pre'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+</head>
+<body>
+<div class="wrap">
+
+<!-- ヘッダー -->
+<div class="version-header">
+  <h1>SDFT Unified Complete v0.0.2</h1>
+  <p style="margin:8px 0 0;opacity:0.9;">構造場分析理論書 — レジーム間テンションの情報幾何学的再定義</p>
+  <div class="version-meta">
+    <span>📅 策定日：2025</span>
+    <span>🔖 バージョン：v0.0.2</span>
+    <span>⬆️ 前バージョン：v0.0.1（𝓣 再定義中）</span>
+    <span>📌 主要変更：𝓣 を情報幾何学・情報理論で再定義</span>
+  </div>
+</div>
+
+<!-- 目次 -->
+<div class="toc">
+  <strong>目次</strong>
+  <ol>
+    <li><a href="#overview">概要・このバージョンの変更点</a></li>
+    <li><a href="#variables">コア変数一覧</a></li>
+    <li><a href="#tension-old">旧定義：𝓣 の v1.4.2 定義式</a></li>
+    <li><a href="#tension-new">新定義：𝓣 の情報幾何学的再定義（v0.0.2）</a>
+      <ol>
+        <li><a href="#t1">T₁：対数分配関数差</a></li>
+        <li><a href="#t2">T₂：Fisher情報行列スペクトル差</a></li>
+        <li><a href="#t3">T₃：α-ダイバージェンス</a></li>
+        <li><a href="#t4">T₄：統計的ホロノミー</a></li>
+        <li><a href="#t5">T₅：通信路損失率（旧社会層）</a></li>
+      </ol>
+    </li>
+    <li><a href="#compare">新旧対比表</a></li>
+    <li><a href="#observation">観測経路サマリー</a></li>
+    <li><a href="#unchanged">変更なし：S/D/H/F の定義</a></li>
+    <li><a href="#phase">位相判定（変更なし）</a></li>
+    <li><a href="#glossary">用語集</a></li>
+  </ol>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="overview">1. 概要・このバージョンの変更点</h2>
+
+<p>v0.0.2 での主要変更は <strong>レジーム間テンション 𝓣 の完全な再定義</strong> です。</p>
+
+<div class="note">
+  <strong>変更の動機：</strong><br>
+  v1.4.2 の 𝓣 定義式は物理学（ゲージ理論・位相幾何学・作用素論）からアナロジーを借用していたが、
+  「なぜその式なのか」の理論的根拠が組織・顧客行動の文脈では成立していなかった。
+  また、各項の単位が不揃いのまま加算されており、数値の解釈が困難だった。
+  v0.0.2 では全項を <strong>情報幾何学・シャノン情報理論</strong> の枠組みで再定義し、
+  観測データから計算可能な経路を与える。
+</div>
+
+<table class="compare-table">
+  <thead><tr><th>項目</th><th>v1.4.2</th><th>v0.0.2</th></tr></thead>
+  <tbody>
+    <tr>
+      <td>𝓣 の理論基盤</td>
+      <td class="old-col">物理学アナロジー（ゲージ理論・位相幾何学）</td>
+      <td class="new-col">情報幾何学・シャノン情報理論</td>
+    </tr>
+    <tr>
+      <td>社会層の扱い</td>
+      <td class="old-col">$b_{norm} + b_{cog} + \max(0, 1-\alpha_{align})$（独立3項）</td>
+      <td class="new-col">通信路損失率 $\mathcal{L}(e)$ に統合</td>
+    </tr>
+    <tr>
+      <td>単位の整合性</td>
+      <td class="old-col">不揃い（各項のスケールが異なる）</td>
+      <td class="new-col">情報量次元に統一（重み係数で正規化）</td>
+    </tr>
+    <tr>
+      <td>観測経路</td>
+      <td class="old-col">ほぼ全項が Assumed（DataFrame 直接入力）</td>
+      <td class="new-col">T₁・T₃ は時系列から直接計算可能</td>
+    </tr>
+    <tr>
+      <td>項の数</td>
+      <td class="old-col">7項（4構造 + 3社会層）</td>
+      <td class="new-col">5項（4情報幾何 + 1通信路損失）</td>
+    </tr>
+    <tr>
+      <td>S/D/H/F の定義</td>
+      <td>変更なし</td>
+      <td>変更なし</td>
+    </tr>
+    <tr>
+      <td>位相判定（5相）</td>
+      <td>変更なし</td>
+      <td>変更なし</td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- ============================================================ -->
+<h2 id="variables">2. コア変数一覧（v0.0.2）</h2>
+
+<table class="var-table">
+  <thead>
+    <tr><th>記号</th><th>名称</th><th>意味</th><th>計算経路</th><th>証拠分類</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>S</strong></td>
+      <td>Entropy</td>
+      <td>分布の散逸度・無秩序性</td>
+      <td>時系列から自動計算</td>
+      <td>Derived</td>
+    </tr>
+    <tr>
+      <td><strong>D</strong></td>
+      <td>Fractal Dimension</td>
+      <td>系列構造の複雑性</td>
+      <td>時系列から自動計算</td>
+      <td>Derived</td>
+    </tr>
+    <tr>
+      <td><strong>H</strong></td>
+      <td>Hurst Exponent</td>
+      <td>状態の時間的持続性</td>
+      <td>時系列から自動計算</td>
+      <td>Derived</td>
+    </tr>
+    <tr>
+      <td><strong>F</strong></td>
+      <td>Free Energy</td>
+      <td>$F = U - \Theta S$</td>
+      <td>U・Θ が外部入力</td>
+      <td>Assumed / Hypothesis</td>
+    </tr>
+    <tr>
+      <td><strong>𝓣</strong></td>
+      <td>Regime Tension</td>
+      <td>レジーム間の情報幾何学的不整合</td>
+      <td>時系列・経験分布から推定（T₁・T₃）、近似推定（T₂・T₄・T₅）</td>
+      <td>Derived（T₁・T₃）/ Assumed（T₂・T₄・T₅）</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="del">
+  <strong>削除済み変数（v0.0.2 でも使用禁止）：</strong><br>
+  q, W_ij, ε, μ, σ, v, Z, α, τ, E, B, φ, H_eff, F_lorentz, charge, mass, LA, LB, ΔTopo, ΔOp,
+  A, P_behavior, salience, feasibility, legitimacy, reward, mutuality, cognitive_cost,
+  normative_barrier, cognitive_barrier, affordance_gain, affordance_alignment
+</div>
+
+<!-- ============================================================ -->
+<h2 id="tension-old">3. 旧定義：𝓣 の v1.4.2 定義式</h2>
+
+<p>参照・比較のために v1.4.2 の定義式を記載する。<strong>このバージョンでは使用しない。</strong></p>
+
+<div class="eq">
+  $$\mathcal{T}^{(v1.4.2)}_{reg}(e) = \underbrace{\left|\log\frac{L_A}{L_B}\right| + \kappa \cdot \Delta\mathrm{Topo} + \lambda \cdot \Delta\mathrm{Op} + \eta \cdot \|hol(W_{cycle}) - I\|}_{\text{構造差・ゲージ差（物理アナロジー）}} + \underbrace{b_{norm} + b_{cog} + \max(0,\ 1 - \alpha_{align})}_{\text{社会層}}$$
+  <div class="eq-label">式(OLD-1)：v1.4.2 レジーム間テンション定義式</div>
+</div>
+
+<h3>各項の元の意味と理論的問題点</h3>
+
+<table class="compare-table">
+  <thead><tr><th>項</th><th>元の意味</th><th>理論的根拠</th><th>問題点</th></tr></thead>
+  <tbody>
+    <tr>
+      <td>$\left|\log\frac{L_A}{L_B}\right|$</td>
+      <td>レジーム特性長の比の対数</td>
+      <td>ゲージ理論（物理）</td>
+      <td>$L_A, L_B$ の定義・観測方法が未定義</td>
+    </tr>
+    <tr>
+      <td>$\kappa \cdot \Delta\mathrm{Topo}$</td>
+      <td>トポロジー構造の差</td>
+      <td>位相幾何学（物理）</td>
+      <td>トポロジー差の定量化方法が未定義</td>
+    </tr>
+    <tr>
+      <td>$\lambda \cdot \Delta\mathrm{Op}$</td>
+      <td>演算子（意味変換）の差</td>
+      <td>作用素論（物理）</td>
+      <td>演算子の具体的な同定方法がない</td>
+    </tr>
+    <tr>
+      <td>$\eta \cdot \|hol - I\|$</td>
+      <td>四元数ループのゲージ歪み</td>
+      <td>ゲージ理論（物理）</td>
+      <td>$W_{ij}$（四元数）の観測経路がない</td>
+    </tr>
+    <tr>
+      <td>$b_{norm}$</td>
+      <td>規範的障壁</td>
+      <td>組織社会学</td>
+      <td>数値化の基準がない（全て Assumed）</td>
+    </tr>
+    <tr>
+      <td>$b_{cog}$</td>
+      <td>認知的障壁</td>
+      <td>認知科学</td>
+      <td>同上</td>
+    </tr>
+    <tr>
+      <td>$\max(0, 1-\alpha_{align})$</td>
+      <td>アフォーダンス方向不一致</td>
+      <td>アフォーダンス理論</td>
+      <td>$\alpha_{align}$ の測定方法が未定義</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="warn">
+  <strong>加法構造の問題：</strong>
+  各項の単位が $[\text{対数比}]$、$[\text{離散距離}]$、$[\text{四元数ノルム}]$、$[0, 1]$ と不揃いのまま単純加算されている。
+  重み $\kappa, \lambda, \eta$ がこれを吸収する設計だが、重みの決定方法も未定義のため、出力値の絶対的解釈が不可能。
+</div>
+
+<!-- ============================================================ -->
+<h2 id="tension-new">4. 新定義：𝓣 の情報幾何学的再定義（v0.0.2）</h2>
+
+<h3>完全な定義式</h3>
+
+<div class="eq">
+  $$\mathcal{T}_{IG}(A, B) = \underbrace{|\psi_A - \psi_B|}_{T_1} + \underbrace{\kappa \cdot \|\mathrm{spec}(G_A) - \mathrm{spec}(G_B)\|}_{T_2} + \underbrace{\lambda \cdot D^{(\alpha)}(p_A \| p_B)}_{T_3} + \underbrace{\eta \cdot \|\mathrm{Hol}^{(\alpha)}(\gamma) - I\|}_{T_4} + \underbrace{\mu \cdot \mathcal{L}(e)}_{T_5}$$
+  <div class="eq-label">式(v0.0.2-1)：レジーム間テンション — 情報幾何学・情報理論統合定義</div>
+</div>
+
+<p>各項が測るものをレイヤー別に整理すると：</p>
+
+<div class="note">
+  <strong>2つの層からなる構造：</strong><br>
+  <strong>T₁〜T₄：静的構造差</strong>（レジーム A と B の「場」としての差）<br>
+  <strong>T₅：動的伝達損失</strong>（エッジ $e$ を通過する際の「流れ」の損失）<br><br>
+  全項が情報量次元（または情報量次元に正規化可能な無次元量）で統一されている。
+</div>
+
+<!-- ---- T1 ---- -->
+<h3 id="t1">4-1. $T_1$：対数分配関数差</h3>
+
+<div class="eq">
+  $$T_1 = |\psi_A(\theta_A) - \psi_B(\theta_B)|$$
+  <div class="eq-label">式(v0.0.2-2)</div>
+</div>
+
+<h4>理論的背景</h4>
+<p>
+  指数型分布族 $p(x; \theta) = \exp(\theta \cdot x - \psi(\theta))$ において、
+  対数分配関数（ポテンシャル関数）$\psi(\theta) = \log Z(\theta)$ は
+  分布が「どれだけの状態空間を有効に使っているか」を表す。
+  情報幾何学では $\psi(\theta)$ は統計多様体上のポテンシャルであり、
+  その差は2つのレジームの「自由度・スケールの乖離」を測る。
+</p>
+
+<h4>旧定義 $\left|\log\frac{L_A}{L_B}\right|$ との対応</h4>
+<p>
+  旧定義の特性長比 $L_A / L_B$ は「スケールの比」を測ることを意図していた。
+  $\psi_A - \psi_B$ は分配関数の対数差であり、同じく「スケール・自由度の対数差」として機能する。
+  ただし観測からの計算経路が明確に存在する点が異なる。
+</p>
+
+<h4>観測からの計算経路</h4>
+<pre>
+# 経験的な対数分配関数の推定（負の対数尤度から）
+psi_A ≈ -mean(log p_hat_A(x_t) for x_t in regime_A)
+psi_B ≈ -mean(log p_hat_B(x_t) for x_t in regime_B)
+T1 = abs(psi_A - psi_B)
+
+証拠分類：Derived（各レジームの時系列データが存在する場合）
+</pre>
+
+<!-- ---- T2 ---- -->
+<h3 id="t2">4-2. $T_2$：Fisher情報行列スペクトル差</h3>
+
+<div class="eq">
+  $$T_2 = \kappa \cdot \|\mathrm{spec}(G_A) - \mathrm{spec}(G_B)\|$$
+  <div class="eq-label">式(v0.0.2-3)</div>
+</div>
+
+<p>ここで Fisher 情報行列 $G$ は：</p>
+
+<div class="eq">
+  $$G_{ij}(\theta) = \mathbb{E}\!\left[\frac{\partial \log p(x;\theta)}{\partial \theta_i}\frac{\partial \log p(x;\theta)}{\partial \theta_j}\right]$$
+  <div class="eq-label">式(v0.0.2-4)：Fisher情報行列</div>
+</div>
+
+<h4>理論的背景</h4>
+<p>
+  Fisher 情報行列は統計多様体上の計量テンソル（Riemannian metric）であり、
+  その固有値スペクトルは「その分布が持つ変化の方向性と感度の構造」を表す。
+  $\mathrm{spec}(G)$ のズレは、2つのレジームが「どれだけ異なる統計的感度構造を持つか」、
+  すなわち <strong>多様体の形（曲率構造）の違い</strong> に対応する。
+</p>
+
+<h4>旧定義 $\kappa \cdot \Delta\mathrm{Topo}$ との対応</h4>
+<p>
+  旧定義の「トポロジー差」は位相幾何学的な構造の差を意図していた。
+  Fisher スペクトル差は統計多様体上の「幾何学的構造の差」であり、
+  情報幾何学の文脈でのトポロジー差に対応する。
+</p>
+
+<h4>観測からの計算経路</h4>
+<pre>
+# スコア関数の経験的共分散行列として推定
+score_A = [grad_log_p(x_t) for x_t in regime_A]
+G_hat_A = (1/n) * sum(s @ s.T for s in score_A)
+G_hat_B = (1/n) * sum(s @ s.T for s in regime_B)
+
+eigvals_A = sorted(eigenvalues(G_hat_A))
+eigvals_B = sorted(eigenvalues(G_hat_B))
+T2 = kappa * norm(eigvals_A - eigvals_B)
+
+証拠分類：Assumed（スコア関数の推定に仮定が必要）
+</pre>
+
+<!-- ---- T3 ---- -->
+<h3 id="t3">4-3. $T_3$：$\alpha$-ダイバージェンス</h3>
+
+<div class="eq">
+  $$T_3 = \lambda \cdot D^{(\alpha)}(p_A \| p_B)$$
+  <div class="eq-label">式(v0.0.2-5)</div>
+</div>
+
+<p>ここで $\alpha$-ダイバージェンスは：</p>
+
+<div class="eq">
+  $$D^{(\alpha)}(p_A \| p_B) = \frac{4}{1-\alpha^2}\left(1 - \int p_A(x)^{\frac{1-\alpha}{2}}\, p_B(x)^{\frac{1+\alpha}{2}}\, dx\right), \quad \alpha \neq \pm 1$$
+  <div class="eq-label">式(v0.0.2-6)：α-ダイバージェンス</div>
+</div>
+
+<h4>特殊ケース</h4>
+<table class="var-table">
+  <thead><tr><th>$\alpha$</th><th>形式</th><th>意味</th><th>推奨用途</th></tr></thead>
+  <tbody>
+    <tr><td>$\alpha = 1$</td><td>$D_{KL}(p_A \| p_B)$</td><td>A の視点から B を見たズレ</td><td>A が基準（送り手）の場合</td></tr>
+    <tr><td>$\alpha = -1$</td><td>$D_{KL}(p_B \| p_A)$</td><td>B の視点から A を見たズレ</td><td>B が基準（受け手）の場合</td></tr>
+    <tr><td>$\alpha = 0$</td><td>Jensen-Shannon 距離</td><td>対称・どちらの視点でも同じ</td><td>対称な分析（推奨デフォルト）</td></tr>
+  </tbody>
+</table>
+
+<h4>理論的背景</h4>
+<p>
+  $\alpha$-ダイバージェンスは情報幾何学の中心的な概念であり、
+  $\alpha$-接続の下での「分布間の情報的距離」を与える。
+  KL ダイバージェンス（$\alpha = \pm 1$）はその特殊ケース。
+  パラメータ $\alpha$ を制御することで、どちらのレジームの視点から差を測るかを調整できる。
+</p>
+
+<h4>旧定義 $\lambda \cdot \Delta\mathrm{Op}$ との対応</h4>
+<p>
+  旧定義の「演算子差」は2つのレジーム間の「変換の差」を意図していた。
+  $D^{(\alpha)}(p_A \| p_B)$ は状態分布そのものの差を情報量として測り、
+  観測データから直接計算できる最も強い証拠根拠を持つ項である。
+</p>
+
+<h4>観測からの計算経路</h4>
+<pre>
+# 経験分布から直接計算（最も観測根拠が強い）
+p_hat_A = empirical_distribution(regime_A_data)
+p_hat_B = empirical_distribution(regime_B_data)
+
+# α=0（Jensen-Shannon）を推奨デフォルトとする
+p_M = 0.5 * p_hat_A + 0.5 * p_hat_B
+JSD = 0.5 * KL(p_hat_A, p_M) + 0.5 * KL(p_hat_B, p_M)
+T3 = lambda_ * sqrt(JSD)  # JSD は距離として使う場合は平方根
+
+証拠分類：Derived（両レジームの時系列データが存在する場合）
+</pre>
+
+<!-- ---- T4 ---- -->
+<h3 id="t4">4-4. $T_4$：統計的ホロノミー</h3>
+
+<div class="eq">
+  $$T_4 = \eta \cdot \|\mathrm{Hol}^{(\alpha)}(\gamma) - I\|$$
+  <div class="eq-label">式(v0.0.2-7)</div>
+</div>
+
+<p>ここで $\alpha$-接続のホロノミーは：</p>
+
+<div class="eq">
+  $$\mathrm{Hol}^{(\alpha)}(\gamma) = \mathcal{P}\exp\!\left(\oint_\gamma \Gamma^{(\alpha)}_{ijk}\, d\theta^k\right)$$
+  <div class="eq-label">式(v0.0.2-8)：α-接続のホロノミー（経路順序積）</div>
+</div>
+
+<p>Christoffel 記号は：</p>
+
+<div class="eq">
+  $$\Gamma^{(\alpha)}_{ijk} = \mathbb{E}\!\left[\partial_i \partial_j \log p \cdot \partial_k \log p\right] + \frac{1-\alpha}{2}\,\mathbb{E}\!\left[\partial_i \log p \cdot \partial_j \log p \cdot \partial_k \log p\right]$$
+  <div class="eq-label">式(v0.0.2-9)：α-接続の Christoffel 記号</div>
+</div>
+
+<h4>理論的背景</h4>
+<p>
+  統計多様体上で閉ループ $\gamma$（複数のレジームを巡る経路）を一周したとき、
+  $\alpha$-接続のホロノミーが単位行列 $I$ からズレる量は
+  その多様体の曲率（Riemann 曲率テンソル）に対応する。
+  これは「複数のレジームをまたいで一周したとき、情報幾何学的に元に戻れるか」を測る量であり、
+  元の四元数ホロノミーと <strong>構造的に同型</strong> である。
+</p>
+
+<div class="eq">
+  $$R_{ijkl} = \frac{1-\alpha^2}{4}\left(g_{il}g_{jk} - g_{ik}g_{jl}\right)$$
+  <div class="eq-label">式(v0.0.2-10)：統計多様体の曲率テンソル（指数型分布族）</div>
+</div>
+
+<h4>旧定義 $\eta \cdot \|hol(W_{cycle}) - I\|$ との対応</h4>
+<p>
+  旧定義の四元数ホロノミー $\|hol(W_{cycle}) - I\|$ と数学的に最も対応する項。
+  ただし旧定義では $W_{ij}$（四元数）の観測経路がなかったのに対し、
+  統計的ホロノミーは Fisher 情報行列から近似推定できる。
+</p>
+
+<h4>観測からの計算経路</h4>
+<pre>
+# Fisher行列の曲率テンソルから近似推定
+# 実用上は以下の近似を使う（指数型分布族での閉形式）
+R_approx = (1 - alpha**2) / 4 * (g_il*g_jk - g_ik*g_jl)
+Hol_approx ≈ I + integral(R_approx over loop area)
+T4 = eta * norm(Hol_approx - I)
+
+証拠分類：Assumed（近似推定のため）
+</pre>
+
+<!-- ---- T5 ---- -->
+<h3 id="t5">4-5. $T_5$：通信路損失率（旧社会層の統合）</h3>
+
+<div class="eq">
+  $$T_5 = \mu \cdot \mathcal{L}(e), \qquad \mathcal{L}(e) = 1 - \frac{I(X_A;\, X_B)}{H(X_A)}$$
+  <div class="eq-label">式(v0.0.2-11)：通信路損失率</div>
+</div>
+
+<p>ここで：</p>
+
+<div class="eq">
+  $$I(X_A; X_B) = H(X_A) + H(X_B) - H(X_A, X_B)$$
+  <div class="eq-label">式(v0.0.2-12)：相互情報量</div>
+</div>
+
+<h4>理論的背景</h4>
+<p>
+  シャノンの通信路符号化定理において、通信路容量は相互情報量 $I(X;Y)$ で与えられる。
+  $\mathcal{L}(e) = 1 - I(X_A; X_B)/H(X_A)$ は「送り手の情報のうち受け手に届かなかった割合」
+  すなわち <strong>情報損失率</strong> を表す。
+</p>
+
+<table class="var-table">
+  <thead><tr><th>$\mathcal{L}(e)$ の値</th><th>意味</th></tr></thead>
+  <tbody>
+    <tr><td>$\mathcal{L} = 0$</td><td>完全に伝わる（チャネル容量 = 送り手のエントロピー）</td></tr>
+    <tr><td>$0 < \mathcal{L} < 1$</td><td>部分的に損失（現実の多くのケース）</td></tr>
+    <tr><td>$\mathcal{L} = 1$</td><td>全く伝わらない（送り手と受け手が独立）</td></tr>
+  </tbody>
+</table>
+
+<h4>旧社会層 $b_{norm} + b_{cog} + \max(0, 1-\alpha_{align})$ との対応</h4>
+
+<table class="compare-table">
+  <thead><tr><th>旧変数</th><th>本質</th><th>通信路損失における役割</th></tr></thead>
+  <tbody>
+    <tr>
+      <td>$b_{norm}$（規範的障壁）</td>
+      <td>通過の許容度</td>
+      <td>チャネルが制度的に閉じている → $I(X_A;X_B)$ が下がる</td>
+    </tr>
+    <tr>
+      <td>$b_{cog}$（認知的障壁）</td>
+      <td>意味の保存率</td>
+      <td>ノイズによる意味の劣化 → $H(X_A, X_B)$ が上がる</td>
+    </tr>
+    <tr>
+      <td>$\max(0, 1-\alpha_{align})$（方向不一致）</td>
+      <td>意図と行動可能性の一致</td>
+      <td>符号化・復号化のミスマッチ → $I(X_A;X_B)$ が下がる</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4>観測からの計算経路</h4>
+<pre>
+# 経験的な相互情報量推定
+H_A  = calc_entropy(regime_A_data)
+H_B  = calc_entropy(regime_B_data)
+H_AB = calc_joint_entropy(regime_A_data, regime_B_data)
+I_AB = H_A + H_B - H_AB
+
+# 損失率
+L_e = 1.0 - (I_AB / (H_A + eps))
+L_e = max(0.0, min(1.0, L_e))  # [0,1] にクリップ
+T5  = mu * L_e
+
+証拠分類：Derived（両レジームのデータが存在する場合）/ Assumed（片側のみの場合）
+</pre>
+
+<!-- ============================================================ -->
+<h2 id="compare">5. 新旧対比表（完全版）</h2>
+
+<table class="compare-table">
+  <thead>
+    <tr>
+      <th>項</th>
+      <th><span class="tag-old">v1.4.2</span> 定義</th>
+      <th><span class="tag-old">v1.4.2</span> 理論基盤</th>
+      <th><span class="tag-new">v0.0.2</span> 定義</th>
+      <th><span class="tag-new">v0.0.2</span> 理論基盤</th>
+      <th>観測可能性</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>$T_1$</td>
+      <td>$\left|\log\frac{L_A}{L_B}\right|$</td>
+      <td>ゲージ理論（特性長）</td>
+      <td>$|\psi_A - \psi_B|$</td>
+      <td>対数分配関数（情報幾何学）</td>
+      <td>★★★</td>
+    </tr>
+    <tr>
+      <td>$T_2$</td>
+      <td>$\kappa \cdot \Delta\mathrm{Topo}$</td>
+      <td>位相幾何学</td>
+      <td>$\kappa\|\mathrm{spec}(G_A)-\mathrm{spec}(G_B)\|$</td>
+      <td>Fisher情報行列（情報幾何学）</td>
+      <td>★★</td>
+    </tr>
+    <tr>
+      <td>$T_3$</td>
+      <td>$\lambda \cdot \Delta\mathrm{Op}$</td>
+      <td>作用素論</td>
+      <td>$\lambda \cdot D^{(\alpha)}(p_A\|p_B)$</td>
+      <td>α-ダイバージェンス（情報幾何学）</td>
+      <td>★★★</td>
+    </tr>
+    <tr>
+      <td>$T_4$</td>
+      <td>$\eta\cdot\|hol(W_{cycle})-I\|$</td>
+      <td>ゲージ理論・ホロノミー</td>
+      <td>$\eta\cdot\|\mathrm{Hol}^{(\alpha)}(\gamma)-I\|$</td>
+      <td>統計的ホロノミー（情報幾何学）</td>
+      <td>★</td>
+    </tr>
+    <tr>
+      <td>$T_5$</td>
+      <td>$b_{norm}+b_{cog}+\max(0,1-\alpha_{align})$</td>
+      <td>組織社会学・認知科学</td>
+      <td>$\mu\cdot\mathcal{L}(e)$</td>
+      <td>シャノン通信路理論</td>
+      <td>★★</td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- ============================================================ -->
+<h2 id="observation">6. 観測経路サマリー</h2>
+
+<table class="var-table">
+  <thead><tr><th>項</th><th>必要データ</th><th>証拠分類</th><th>計算難易度</th></tr></thead>
+  <tbody>
+    <tr><td>$T_1$</td><td>各レジームの時系列データ</td><td>Derived</td><td>低</td></tr>
+    <tr><td>$T_2$</td><td>各レジームの時系列 + スコア関数の推定</td><td>Assumed</td><td>中</td></tr>
+    <tr><td>$T_3$</td><td>各レジームの時系列データ（経験分布）</td><td>Derived</td><td>低</td></tr>
+    <tr><td>$T_4$</td><td>Fisher行列 + 閉ループの定義</td><td>Assumed</td><td>高</td></tr>
+    <tr><td>$T_5$</td><td>両レジーム間の同時観測データ</td><td>Derived / Assumed</td><td>中</td></tr>
+  </tbody>
+</table>
+
+<div class="note">
+  <strong>v0.0.2 での推奨計算戦略：</strong><br>
+  データが豊富な場合：$T_1 + T_3 + T_5$ を Derived として計算し、$T_2 + T_4$ を Assumed で補完。<br>
+  データが少ない場合：$T_3$（JSD）のみを Derived として使い、他項は Assumed で 0 とする。<br>
+  全てのケースで証拠分類ラベルをレポートに明示すること。
+</div>
+
+<!-- ============================================================ -->
+<h2 id="unchanged">7. 変更なし：S / D / H / F の定義</h2>
+
+<p>以下の変数は v0.0.1 から変更なし。</p>
+
+<div class="eq">
+  $$S = -\sum_i p_i \log p_i \quad \text{（シャノンエントロピー、正規化済み）}$$
+  <div class="eq-label">式(v0.0.2-13)</div>
+</div>
+<div class="eq">
+  $$D = \lim_{k \to 0} \frac{\log L(k)}{\log(1/k)} \quad \text{（ヒグチフラクタル次元）}$$
+  <div class="eq-label">式(v0.0.2-14)</div>
+</div>
+<div class="eq">
+  $$H = \lim_{n \to \infty} \frac{\log R(n)/S(n)}{\log n} \quad \text{（Hurst指数）}$$
+  <div class="eq-label">式(v0.0.2-15)</div>
+</div>
+<div class="eq">
+  $$F = U - \Theta S \quad \text{（自由エネルギー、U と } \Theta \text{ は外部パラメータ）}$$
+  <div class="eq-label">式(v0.0.2-16)</div>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="phase">8. 位相判定（変更なし）</h2>
+
+<table class="var-table">
+  <thead><tr><th>位相ラベル</th><th>S</th><th>D</th><th>H</th><th>意味</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Living System</strong></td><td>中（≤0.6）</td><td>中（1.2〜1.7）</td><td>中〜高（≥0.45）</td><td>動的平衡・自己修復</td></tr>
+    <tr><td><strong>Frozen Order</strong></td><td>低（≤0.4）</td><td>低（≤1.4）</td><td>高（≥0.55）</td><td>安定・変化なし</td></tr>
+    <tr><td><strong>Runaway Growth</strong></td><td>中</td><td>高（≥1.6）</td><td>高（≥0.6）</td><td>過成長・バブル</td></tr>
+    <tr><td><strong>Noise Dominant</strong></td><td>高（≥0.65）</td><td>高（≥1.5）</td><td>低（≤0.45）</td><td>構造崩壊の前兆</td></tr>
+    <tr><td><strong>Collapse</strong></td><td>高（≥0.8）</td><td>不安定</td><td>低（≤0.3）</td><td>持続不能</td></tr>
+  </tbody>
+</table>
+
+<p>相転移予兆条件（変更なし）：</p>
+<div class="eq">
+  $$\text{critical\_alert} = \left(\frac{dH}{dt} < 0\right) \land \left(\mathrm{Var}(D)\text{ 増大}\right) \land \left(\frac{dS}{dt} > 0\right)$$
+  <div class="eq-label">式(v0.0.2-17)：相転移予兆の3条件（全て揃った場合のみアラート）</div>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="glossary">9. 用語集</h2>
+
+<table class="var-table">
+  <thead><tr><th>用語</th><th>定義</th></tr></thead>
+  <tbody>
+    <tr><td><strong>統計多様体</strong></td><td>確率分布の集合に幾何学的構造を与えた空間。$\mathcal{M} = \{p(x;\theta) \mid \theta \in \Theta\}$</td></tr>
+    <tr><td><strong>Fisher情報行列</strong></td><td>統計多様体上の計量テンソル。$G_{ij} = \mathbb{E}[\partial_i \log p \cdot \partial_j \log p]$</td></tr>
+    <tr><td><strong>対数分配関数</strong></td><td>指数型分布族の正規化定数の対数。$\psi(\theta) = \log \int \exp(\theta \cdot x) dx$</td></tr>
+    <tr><td><strong>α-ダイバージェンス</strong></td><td>$\alpha$-接続の下での分布間の情報的距離。KL ダイバージェンスの一般化。</td></tr>
+    <tr><td><strong>統計的ホロノミー</strong></td><td>統計多様体上の閉ループを一周した際の平行移動の「ズレ」。多様体の曲率に対応。</td></tr>
+    <tr><td><strong>通信路損失率</strong></td><td>$\mathcal{L}(e) = 1 - I(X_A;X_B)/H(X_A)$。エッジ通過時の情報損失の割合。</td></tr>
+    <tr><td><strong>相互情報量</strong></td><td>$I(X;Y) = H(X) + H(Y) - H(X,Y)$。2変数間の情報的依存性の量。</td></tr>
+    <tr><td><strong>Christoffel記号</strong></td><td>多様体上の接続を定める係数。$\alpha$-接続の場合は $\alpha$ に依存する。</td></tr>
+  </tbody>
+</table>
+
+<hr style="margin-top:48px;border:none;border-top:1px solid #dde3ed;">
+<p style="text-align:right;font-size:0.82em;color:#aaa;margin-top:16px;">
+  株式会社アドインテ SDFT位相空間関係性モデル sdft-revised v0.0.2<br>
+  SDFT_Unified_Complete_v0.0.2.html — カノニカルソース
+</p>
+
+</div>
+</body>
+</html>
