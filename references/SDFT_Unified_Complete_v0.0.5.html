@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SDFT Unified Complete v0.0.4 — 理論書</title>
+<title>SDFT Unified Complete v0.0.5 — 理論書</title>
 <style>
   body { font-family:"Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif; font-size:15px; line-height:1.8; color:#1a1a2e; background:#f9f9f9; margin:0; }
   .wrap { max-width:960px; margin:0 auto; padding:40px 24px 80px; }
@@ -48,12 +48,12 @@ MathJax = {
 <div class="wrap">
 
 <div class="version-header">
-  <h1>SDFT Unified Complete v0.0.4</h1>
+  <h1>SDFT Unified Complete v0.0.5</h1>
   <p style="margin:6px 0 0;opacity:0.9;">構造場分析理論書 — グランドポテンシャル Φ の導入・介入最適化アルゴリズムの設計方針</p>
   <div class="version-meta">
-    <span>🔖 v0.0.4</span>
-    <span>⬆️ 前バージョン：v0.0.3（𝓣 ベクトル化）</span>
-    <span>📌 主要追加：グランドポテンシャル Φ・介入最適化</span>
+    <span>🔖 v0.0.5</span>
+    <span>⬆️ 前バージョン：v0.0.4（グランドポテンシャル導入）</span>
+    <span>📌 主要変更：アフォーダンス廃止・行動条件診断を既存変数の読み替えで実装</span>
   </div>
 </div>
 
@@ -86,11 +86,12 @@ MathJax = {
 <h2 id="overview">1. 概要・v0.0.3 からの変更点</h2>
 
 <table class="compare-table">
-  <thead><tr><th>項目</th><th>v0.0.3</th><th>v0.0.4 <span class="new-badge">NEW</span></th></tr></thead>
+  <thead><tr><th>項目</th><th>v0.0.3</th><th>v0.0.5 <span class="new-badge">NEW</span></th></tr></thead>
   <tbody>
     <tr><td>自由エネルギー F</td><td>U − ΘS（Assumed 主体）</td><td>Fisher 行列から Derived として定義</td></tr>
     <tr><td>グランドポテンシャル Φ</td><td>未対応</td><td><strong>導入・定義確定</strong></td></tr>
-    <tr><td>施策提案（§3）</td><td>v0.0.3 未対応</td><td><strong>介入最適化アルゴリズムの設計方針を定義</strong></td></tr>
+    <tr><td>アフォーダンス（A / P_behavior）</td><td>v0.0.4 先行実装</td><td><strong>廃止（学術的確立なし）</strong></td></tr>
+    <tr><td>§4-2 行動条件診断</td><td>v0.0.4 未対応</td><td><strong>既存変数の読み替えで実装（新変数なし）</strong></td></tr>
     <tr><td>介入優先順位</td><td>未対応</td><td><strong>∂Φ/∂u_i に基づく priority_score を定義</strong></td></tr>
     <tr><td>𝓣 ベクトル・位相判定</td><td>変更なし</td><td>変更なし</td></tr>
     <tr><td>アルゴリズム実装</td><td>—</td><td>設計方針のみ（実装は v0.1 以降）</td></tr>
@@ -98,7 +99,7 @@ MathJax = {
 </table>
 
 <div class="warn">
-  <strong>v0.0.4 の実装状態：</strong>
+  <strong>v0.0.5 の実装状態：</strong>
   介入最適化アルゴリズムは設計方針のみを定義します。
   Python 実装・レポートへの組み込みは v0.1 以降で対応します。
   §3 は「設計方針を表示」し、具体的な計算は「実装待ち」として明示します。
@@ -120,7 +121,7 @@ MathJax = {
 
 <div class="eq">
   $$\Phi = U - TS - \mu N = F - \mu N$$
-  <div class="eq-label">式(v0.0.4-1)：グランドポテンシャルの定義</div>
+  <div class="eq-label">式(v0.0.5-1)：グランドポテンシャルの定義</div>
 </div>
 
 <div class="key-box">
@@ -137,7 +138,7 @@ MathJax = {
 
 <div class="eq">
   $$d\Phi = -S\,dT - P\,dV - N\,d\mu$$
-  <div class="eq-label">式(v0.0.4-2)：グランドポテンシャルの全微分</div>
+  <div class="eq-label">式(v0.0.5-2)：グランドポテンシャルの全微分</div>
 </div>
 
 <p>各項の SDFT への対応：</p>
@@ -162,7 +163,7 @@ MathJax = {
 
 <div class="eq">
   $$S = k_B \ln 2 \cdot H_{bit}, \qquad H_{bit} = -\sum_i p_i \log_2 p_i \quad [\text{bit}]$$
-  <div class="eq-label">式(v0.0.4-3)：$k_B = 1.380649 \times 10^{-23}$ J/K</div>
+  <div class="eq-label">式(v0.0.5-3)：$k_B = 1.380649 \times 10^{-23}$ J/K</div>
 </div>
 
 <p>
@@ -175,7 +176,7 @@ MathJax = {
 
 <div class="eq">
   $$T = \frac{\mathrm{tr}(G^{-1}(\theta))}{d \cdot k_B} \quad [K]$$
-  <div class="eq-label">式(v0.0.4-4)</div>
+  <div class="eq-label">式(v0.0.5-4)</div>
 </div>
 
 <p>
@@ -187,21 +188,21 @@ MathJax = {
 
 <div class="eq">
   $$U = \frac{\mathrm{tr}(G(\theta))}{d} \quad [J \text{ 相当}]$$
-  <div class="eq-label">式(v0.0.4-5)</div>
+  <div class="eq-label">式(v0.0.5-5)</div>
 </div>
 
 <h4>自由エネルギー</h4>
 
 <div class="eq">
   $$F = U - T \cdot S = \frac{\mathrm{tr}(G)}{d} - \frac{\ln 2 \cdot H_{bit} \cdot \mathrm{tr}(G^{-1})}{d} \quad [J]$$
-  <div class="eq-label">式(v0.0.4-6)</div>
+  <div class="eq-label">式(v0.0.5-6)</div>
 </div>
 
 <h4>圧力（符号付き）</h4>
 
 <div class="eq">
   $$P = \mathrm{sign}(d\Phi) \cdot \|d\Phi\|_G = \mathrm{sign}(d\Phi) \cdot \sqrt{(\nabla_\theta\Phi)^\top G^{-1}(\nabla_\theta\Phi)} \quad [J]$$
-  <div class="eq-label">式(v0.0.4-7)</div>
+  <div class="eq-label">式(v0.0.5-7)</div>
 </div>
 
 <p>
@@ -218,14 +219,14 @@ MathJax = {
 
 <div class="eq">
   $$V = \int_\Omega \sqrt{\det G(\theta)}\,d^d\theta, \qquad dV = \sqrt{\det G(\theta)}\,d^d\theta \quad [m^3 \text{ 相当}]$$
-  <div class="eq-label">式(v0.0.4-8)：Jeffreys 事前分布密度の積分</div>
+  <div class="eq-label">式(v0.0.5-8)：Jeffreys 事前分布密度の積分</div>
 </div>
 
 <h4>化学ポテンシャル（人の移動コスト）</h4>
 
 <div class="eq">
   $$\mu = 2\sqrt{T_2} = 2\sqrt{d_B(p_A, p_B)} \quad [J/\text{人}]$$
-  <div class="eq-label">式(v0.0.4-9)：Fisher-Rao 測地距離の Bhattacharyya 近似</div>
+  <div class="eq-label">式(v0.0.5-9)：Fisher-Rao 測地距離の Bhattacharyya 近似</div>
 </div>
 
 <p>
@@ -237,7 +238,7 @@ MathJax = {
 
 <div class="eq">
   $$\Phi = F - \mu N = \frac{\mathrm{tr}(G)}{d} - \frac{\ln 2 \cdot H_{bit} \cdot \mathrm{tr}(G^{-1})}{d} - 2\sqrt{T_2} \cdot N \quad [J]$$
-  <div class="eq-label">式(v0.0.4-10)：SDFT 版グランドポテンシャル</div>
+  <div class="eq-label">式(v0.0.5-10)：SDFT 版グランドポテンシャル</div>
 </div>
 
 <!-- ============================================================ -->
@@ -284,7 +285,7 @@ MathJax = {
 <div class="eq">
   $$\min_{u_1,...,u_K,\, K} \sum_{k=1}^{K} \|u_k\|^2 + \lambda K$$
   $$\text{subject to} \quad \Phi(t) \geq \Phi_0 \quad \forall t$$
-  <div class="eq-label">式(v0.0.4-11)：最小インパクト・最小介入回数の最適化問題</div>
+  <div class="eq-label">式(v0.0.5-11)：最小インパクト・最小介入回数の最適化問題</div>
 </div>
 
 <table class="var-table">
@@ -385,7 +386,7 @@ Step 10：次のサイクルへ
 
 <div class="eq">
   $$\mathrm{priority}_i = \frac{|\partial\Phi/\partial u_i|}{c_i} \cdot \mathrm{sign}(\Delta\Phi_{need})$$
-  <div class="eq-label">式(v0.0.4-12)：介入優先スコア</div>
+  <div class="eq-label">式(v0.0.5-12)：介入優先スコア</div>
 </div>
 
 <table class="var-table">
@@ -398,9 +399,9 @@ Step 10：次のサイクルへ
 </table>
 
 <div class="warn">
-  <strong>v0.0.4 での介入コスト $c_i$ の扱い：</strong><br>
+  <strong>v0.0.5 での介入コスト $c_i$ の扱い：</strong><br>
   $c_N$（1人あたりの介入コスト）、$c_{T_2}$（T₂ を1単位変化させるコスト）、
-  $c_\theta$（θ を1単位変化させるコスト）は v0.0.4 では全て Assumed として外部から設定する。
+  $c_\theta$（θ を1単位変化させるコスト）は v0.0.5 では全て Assumed として外部から設定する。
   実測コストへの置き換えは v0.1 以降で対応。
 </div>
 
@@ -422,7 +423,7 @@ Step 10：次のサイクルへ
 </table>
 
 <!-- ============================================================ -->
-<h2 id="glossary">5. 用語集（v0.0.4 追加分）</h2>
+<h2 id="glossary">5. 用語集（v0.0.5 追加分）</h2>
 
 <table class="var-table">
   <thead><tr><th>用語</th><th>定義</th></tr></thead>
@@ -440,8 +441,8 @@ Step 10：次のサイクルへ
 
 <hr style="margin-top:48px;border:none;border-top:1px solid #dde3ed;">
 <p style="text-align:right;font-size:0.8em;color:#aaa;margin-top:14px;">
-  株式会社アドインテ SDFT位相空間関係性モデル sdft-revised v0.0.4<br>
-  SDFT_Unified_Complete_v0.0.4.html — カノニカルソース
+  株式会社アドインテ SDFT位相空間関係性モデル sdft-revised v0.0.5<br>
+  SDFT_Unified_Complete_v0.0.5.html — カノニカルソース
 </p>
 
 </div>

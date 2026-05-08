@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SDFT revised v0.0.4 — {{REPORT_TITLE}}</title>
+<title>SDFT revised v0.0.5 — {{REPORT_TITLE}}</title>
 <!--
-  report_template_v004.html
-  sdft-revised v0.0.4 レポートテンプレート
+  report_template_v005.html
+  sdft-revised v0.0.5 レポートテンプレート
   Fill {{PLACEHOLDERS}} via Python script before serving.
   DO NOT output this file directly as a response.
 -->
@@ -66,11 +66,8 @@
   .ev-assumed   { background:#fef9e7; color:#b7770d; }
   .tension-alpha { font-size:.68rem; color:#d35400; margin-top:2px; }
 
-  /* 未対応セクション */
-  .not-implemented { text-align:center; padding:48px 24px; background:#fafafa; border:2px dashed #ddd; border-radius:10px; color:#bbb; }
-  .not-implemented-icon { font-size:2.5rem; margin-bottom:12px; }
-  .not-implemented-title { font-size:1.4rem; font-weight:700; color:#ccc; margin-bottom:8px; letter-spacing:.05em; }
-  .not-implemented-desc { font-size:.9rem; color:#ccc; }
+
+  /* §5 シナリオ */
 
   /* §3 設計方針ボックス */
   .intervention-box { background:#f0f4f8; border:1px solid #c0d0e0; border-radius:10px; padding:20px 24px; }
@@ -129,7 +126,7 @@
 <!-- ヘッダー -->
 <div class="report-header">
   <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;">
-    <span class="version-badge">SDFT revised v0.0.4</span>
+    <span class="version-badge">SDFT revised v0.0.5</span>
   </div>
   <h1>{{REPORT_TITLE}}</h1>
   <div class="report-meta">
@@ -299,10 +296,26 @@
       推奨介入変数：<strong>{{BEST_VARIABLE}}</strong>　必要操作量：Δu* = {{DELTA_U_OPTIMAL}}
     </p>
     <div class="impl-note">
-      ⚠️ 上記は設計方針の表示です。介入最適化の Python 完全実装は v0.1 以降。
       介入コスト c_i = (c_N={{COST_N}}, c_T2={{COST_T2}}, c_θ={{COST_THETA}}) は Assumed 値として設定されています。
     </div>
   </div>
+
+  <!-- Φ エネルギー-時刻グラフ -->
+  <h3 style="font-size:.95rem;color:#1a3a5c;margin:22px 0 10px;">
+    Φ エネルギー-時刻グラフ
+  </h3>
+  <p style="font-size:.83rem;color:#6b7a99;margin-bottom:10px;">
+    青線：実際の Φ 軌跡　／　灰色破線：介入なし場合の推定軌跡　／
+    赤破線：介入閾値 Φ₀　／　色付き矢印：介入点での Φ 跳ね上がり
+  </p>
+  {{PHI_ENERGY_GRAPH_SVG}}
+
+  <!-- 介入詳細テーブル -->
+  <h3 style="font-size:.95rem;color:#1a3a5c;margin:20px 0 10px;">
+    介入詳細（操作変数・ΔΦ・priority）
+  </h3>
+  {{PHI_INTERVENTION_TABLE}}
+
 </section>
 
 <!-- §4 変革実行環境の診断 -->
@@ -324,21 +337,38 @@
     </table>
   </div>
 
-  <!-- 4-2 未対応 -->
-  <h3 style="font-size:.95rem;color:#1a3a5c;margin:20px 0 10px;">4-2. アフォーダンス層</h3>
-  <div class="not-implemented">
-    <div class="not-implemented-icon">⚠️</div>
-    <div class="not-implemented-title">v0.0.4 未対応</div>
-    <div class="not-implemented-desc">アフォーダンス層（A / P_behavior / 6成分）は v0.1 以降で実装予定です。</div>
+  <!-- 4-2 行動条件診断 -->
+  <h3 style="font-size:.95rem;color:#1a3a5c;margin:20px 0 10px;">4-2. 行動条件診断</h3>
+  <p style="font-size:.83rem;color:#6b7a99;margin-bottom:10px;">
+    𝓣・Φ・H の読み替えによる診断。新しい変数は使用しない。全項目 Derived。
+  </p>
+  <div class="table-wrap">
+    <table class="evidence-table">
+      <thead>
+        <tr>
+          <th>診断項目</th>
+          <th>対応変数</th>
+          <th>ステータス</th>
+          <th>解釈</th>
+        </tr>
+      </thead>
+      <tbody>{{ACTION_CONDITION_ROWS}}</tbody>
+    </table>
+  </div>
+  <div style="margin-top:12px;padding:12px 16px;border-radius:8px;border:1px solid #e0e4ed;background:#f8f9fb;">
+    <strong style="font-size:.88rem;">総合判定：</strong>
+    <span class="kpi-status {{ACTION_OVERALL_CSS}}" style="margin-left:8px;">{{ACTION_OVERALL_STATUS}}</span>
+    <span style="font-size:.88rem;margin-left:10px;color:#555;">{{ACTION_OVERALL_MESSAGE}}</span>
   </div>
 
-  <!-- 4-3 未対応 -->
+  <!-- 4-3 エッジ障壁ヒートマップ -->
   <h3 style="font-size:.95rem;color:#1a3a5c;margin:20px 0 10px;">4-3. エッジ障壁ヒートマップ</h3>
-  <div class="not-implemented">
-    <div class="not-implemented-icon">⚠️</div>
-    <div class="not-implemented-title">v0.0.4 未対応</div>
-    <div class="not-implemented-desc">障壁ヒートマップはアフォーダンス層の実装後に対応予定です。</div>
-  </div>
+  <p style="font-size:.83rem;color:#6b7a99;margin-bottom:10px;">
+    各エッジの flow_ease = (1 − μ/μ_max) × (1 − T₅)　
+    μ=2√T₂ [Derived]　T₅ [Derived]　μ_max [Assumed]
+  </p>
+  {{EDGE_HEATMAP_TABLE}}
+  <div style="margin-top:16px;">{{EDGE_HEATMAP_SVG}}</div>
 
   <!-- 4-4. 証拠分類表 -->
   <h3 style="font-size:.95rem;color:#1a3a5c;margin:20px 0 10px;">4-4. 証拠分類表</h3>
@@ -406,10 +436,6 @@
     </div>
   </div>
 
-  <!-- A 時系列：未対応 -->
-  <div style="margin-top:16px;padding:12px 16px;background:#fafafa;border:1px dashed #ddd;border-radius:8px;text-align:center;color:#bbb;font-size:.85rem;">
-    ⚠️ A（アフォーダンス）時系列 — v0.0.4 未対応
-  </div>
 
   <!-- シナリオ表 -->
   <h3 style="font-size:.95rem;color:#1a3a5c;margin:20px 0 10px;">予測シナリオ</h3>
@@ -468,7 +494,7 @@
     <div class="glossary-item"><div class="glossary-term">Assumed / Hypothesis</div><div class="glossary-desc">Assumed：仮定値。Hypothesis：解釈的推論。</div></div>
   </div>
   <p style="margin-top:20px;font-size:.8rem;color:#888;text-align:right;">
-    株式会社アドインテ SDFT位相空間関係性モデル sdft-revised v0.0.4
+    株式会社アドインテ SDFT位相空間関係性モデル sdft-revised v0.0.5
   </p>
 </section>
 
