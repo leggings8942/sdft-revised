@@ -1,25 +1,40 @@
 """
-sdft_v005_core.py
-SDFT revised v0.0.5 — コア参照実装
+sdft_v006_core.py
+SDFT revised v0.0.6 — コア参照実装
 
-v0.0.4 からの修正：
-  ① calc_H()：/2.0 を削除（std を使う場合は slope がそのまま H）
-  ② calc_fisher_matrix()：データを標準化してから G を計算
-     → T, U, F, Φ の値が合理的なスケールになる
-  ③ calc_T4()：α=±1 で分母がゼロになる問題を修正
-               対数行列式差による近似に変更
+このモジュールは SDFT（Structural Dynamics Field Theory）の Layer 1 と
+Layer 2 の基本実装を提供する。
 
-コア変数の定義：
-  S  = k_B·ln2·H_bit           [J/K]   Derived
-  D  = higuchi_fd(x)            [1-2]   Derived
-  H  = hurst(x)                 [0-1]   Derived
-  G  = Fisher行列（標準化データ） [-]     Derived
-  T  = tr(G⁻¹)/(d·k_B)         [K]     Derived
-  U  = tr(G)/d                  [J相当] Derived
-  F  = U - T·S                  [J]     Derived
-  Φ  = F - μ·N                  [J]     Derived/Observed
-  𝓣  = (T₁,T₂,T₃,T₄,T₅)       [R⁵]    各成分による
-  μ  = 2√T₂                    [J/人]  Derived
+【Layer 1：構造場変数】
+  H_bit = -Σ p_i log2(p_i)        [bit]   Derived
+  S     = k_B · ln2 · H_bit       [J/K]   Derived
+  D     = higuchi_fd(x)            [1-2]   Derived
+  H     = hurst(x)                 [0-1]   Derived
+
+【Layer 2：Fisher 行列とその導出量】
+  G  = Fisher 情報行列（標準化データから計算）  Derived
+  T  = tr(G⁻¹)/(d·k_B)            [K]      Derived
+  U  = tr(G)/d                    [J相当]  Derived
+  F  = U - T·S                    [J]      Derived
+  V  = √det(G) · θ_range^d        [m³相当] Derived
+
+【Layer 2：レジーム間テンション 𝓣】
+  𝓣 = (T₁, T₂, T₃, T₄, T₅) ∈ ℝ⁵
+    T₁ = |ψ_A - ψ_B|                  対数分配関数差
+    T₂ = -log BC(p_A, p_B)            Bhattacharyya 距離
+    T₃ = D^(α≠0)(p_A‖p_B)            α-ダイバージェンス（α=0禁止）
+    T₄ = |log det G_A - log det G_B|  統計的ホロノミー（近似）
+    T₅ = 1 - I(X_A;X_B)/H(X_A)        通信路損失率
+
+【Layer 3：グランドポテンシャル】
+  μ  = 2√T₂                       [J/人]   Derived
+  Φ  = F - μN                     [J]      Derived
+
+設計原則：
+  1. データを標準化してから G を計算する（スケール依存性の排除）
+  2. T₃ の α は 0 以外を使う（T₂ との重複を避ける）
+  3. T₄ は非標準化分散の対数行列式差で近似する
+  4. 𝓣 をスカラーに集約しない
 """
 
 from __future__ import annotations
@@ -749,7 +764,7 @@ if __name__ == "__main__":
         x_B.append(-0.6 * x_B[-1] + random.gauss(0, 1))
 
     print("=" * 60)
-    print("SDFT v0.0.5 コア実装 — 動作確認")
+    print("SDFT v0.0.6 コア実装 — 動作確認")
     print("=" * 60)
 
     result = analyze_single_regime(x_A, x_B, N=100.0, alpha_T3=1.0)

@@ -1,19 +1,40 @@
 """
-sdft_intervention_v005.py
-SDFT revised v0.0.5 — 介入最適化ループ（行動条件診断版）
+sdft_intervention_v006.py
+SDFT revised v0.0.6 — 介入最適化ループと行動条件診断
 
-v0.0.4 からの変更：
-  - アフォーダンス（A / P_behavior / calc_affordance）を完全削除
-  - §4-2 を「行動条件診断」として既存変数の読み替えで再構成
-  - 新しい変数は一切追加しない
+このモジュールは SDFT の Layer 3 を提供する：
+  ① StateSnapshot：時刻 t における全 SDFT 変数のスナップショット
+  ② 行動条件診断（§4-2）：既存変数の読み替えによる6項目評価
+  ③ 介入最適化ループ：Φ ≥ Φ₀ を維持する最小インパクト・最小回数の介入計画
 
-行動条件診断（既存変数の読み替え）：
-  T₂  → 到達可能性（移動コスト μ = 2√T₂ の低さ）
-  T₅  → 伝達効率（情報損失の低さ）
-  T₃  → 方向整合性（非対称差の小ささ）
-  T₁  → スケール適合（レジーム間のスケール差の小ささ）
+【行動条件診断の6項目（既存変数の読み替えのみ）】
+  T₂    → 到達可能性（移動コスト μ = 2√T₂ の低さ）
+  T₅    → 伝達効率（情報損失の低さ）
+  T₃    → 方向整合性（非対称差の小ささ）
+  T₁    → スケール適合（レジーム間のスケール差の小ささ）
   dΦ/dt → 変化の好機（Φ が減少中＝変化の機が熟している）
-  H   → 文脈の持続性（Hurst 指数 > 0.5 でトレンドが維持）
+  H     → 文脈の持続性（Hurst 指数 > 0.5 でトレンドが維持）
+
+【介入最適化の定式化】
+  min  Σ‖u_k‖² + λK
+  s.t. Φ(t) ≥ Φ₀  ∀t
+
+  操作変数：
+    u₁ = N  （人数）       ∂Φ/∂N  = -2√T₂
+    u₂ = T₂ （距離）       ∂Φ/∂T₂ = -N/√T₂
+    u₃ = θ  （構造）       ∂Φ/∂θ  ≈ 数値微分
+
+  アルゴリズム：
+    Step 1: dΦ/dt を推定
+    Step 2: Φ̂(t+τ) を予測
+    Step 3: Φ̂(t+τ) < Φ₀ なら介入
+    Step 4: priority_i = |∂Φ/∂u_i| / c_i を計算
+    Step 5: 最高効率の操作変数 u* と最小操作量 Δu* を決定
+
+設計原則：
+  1. アフォーダンス概念を使わない
+  2. 新しい変数を一切追加しない
+  3. 全項目を Derived として計算する
 """
 
 from __future__ import annotations
@@ -23,7 +44,7 @@ from dataclasses import dataclass, field
 from typing import List, Dict, Tuple, Optional
 import numpy as np
 
-from sdft_v005_core import (
+from sdft_v006_core import (
     K_B, LN2, EPS,
     Evidence,
     calc_H_bit, calc_S, calc_D, calc_H,
@@ -275,14 +296,14 @@ def calc_action_condition(
 
 
 # ============================================================
-# StateSnapshot（アフォーダンス削除版）
+# StateSnapshot
 # ============================================================
 
 @dataclass
 class StateSnapshot:
     """
     時刻 t における SDFT 変数の完全なスナップショット。
-    v0.0.5：アフォーダンス（A / P_behavior）を削除。
+    全ての構造場変数・𝓣・Φ・行動条件診断を一つのオブジェクトに保持する。
     """
     t:    float
     x:    List[float]   # レジームAの時系列データ
@@ -407,7 +428,7 @@ class InterventionStep:
 
 
 # ============================================================
-# 勾配計算・介入ステップ計算（v0.0.4 から継承、アフォーダンス除去）
+# 勾配計算・介入ステップ計算
 # ============================================================
 
 def numerical_grad_Phi(
@@ -668,7 +689,7 @@ if __name__ == "__main__":
     random.seed(42)
 
     print("=" * 60)
-    print("SDFT revised v0.0.5 — 介入最適化・行動条件診断 動作確認")
+    print("SDFT revised v0.0.6 — 介入最適化・行動条件診断 動作確認")
     print("=" * 60)
 
     T_steps  = 15

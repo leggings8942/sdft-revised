@@ -1,15 +1,59 @@
 """
-sdft_report_v005.py
-SDFT revised v0.0.5 — 高優先未実装3件の実装
+sdft_report_v006.py
+SDFT revised v0.0.6 — レポート生成パイプライン
 
-① §4-3 エッジ障壁ヒートマップ
-   T₂・T₅ のエッジ単位集計で flow_ease を計算し SVG ヒートマップを生成
+このモジュールは SDFT の最終出力層を提供する：
+  ① §4-3 エッジ障壁ヒートマップ
+     flow_ease = (1 - μ/μ_max)·(1 - T₅) を計算しテーブル + SVG で表示
+  ② Φ₀（介入閾値）の自動設定
+     Living System 相の境界値から導出
+  ③ τ（予測ホライズン）の自動設定
+     H（Hurst 指数）から導出
+  ④ レポート生成パイプライン
+     ReportContext → プレースホルダー置換 → HTML 保存
 
-② Φ₀（介入閾値）の自動設定
-   Living System 相の境界値から Φ₀ を導出
+使い方の例：
+    from sdft_v006_core      import analyze_single_regime
+    from sdft_intervention_v006 import (
+        StateSnapshot, generate_state_sequence,
+        scan_lambda_tradeoff, find_optimal_lambda,
+        run_intervention_loop,
+    )
+    from sdft_report_v006 import (
+        ReportContext, generate_report,
+        auto_phi_threshold, auto_tau,
+    )
 
-③ レポート生成パイプライン
-   テンプレート → プレースホルダー置換 → HTML 保存
+    # 状態列の生成
+    states     = generate_state_sequence(x_series, x_B_series, N_series)
+
+    # 自動設定
+    phi_0, _   = auto_phi_threshold(states[-1])
+    tau, _     = auto_tau(states[-1].H)
+
+    # 介入最適化
+    tradeoff   = scan_lambda_tradeoff(states, phi_0)
+    opt_lam, _ = find_optimal_lambda(tradeoff)
+    result     = run_intervention_loop(states, phi_0, tau=tau, lambda_count=opt_lam)
+
+    # ReportContext の生成
+    ctx = ReportContext.from_state(
+        state=states[-1],
+        regime_data={"A": data_A, "B": data_B},
+        edges=[("A", "B"), ("B", "A")],
+        intervention_result=result,
+        opt_lambda=opt_lam,
+        H_series=[s.H for s in states],
+        title="SDFT 分析レポート",
+        subject="分析対象",
+    )
+
+    # HTML レポートの生成
+    html = generate_report(
+        ctx=ctx,
+        template_path="assets/report_template_v006.html",
+        output_path="/mnt/user-data/outputs/report.html",
+    )
 """
 
 from __future__ import annotations
@@ -20,7 +64,7 @@ from dataclasses import dataclass, field
 from typing import List, Dict, Tuple, Optional
 import numpy as np
 
-from sdft_v005_core import (
+from sdft_v006_core import (
     K_B, LN2, EPS,
     calc_H_bit, calc_S, calc_D, calc_H,
     calc_fisher_matrix, calc_T_temperature,
@@ -31,7 +75,7 @@ from sdft_v005_core import (
     get_kpi_status,
     calc_sd_position, calc_h_polyline,
 )
-from sdft_intervention_v005 import (
+from sdft_intervention_v006 import (
     ActionConditionDiagnosis,
     calc_action_condition,
     StateSnapshot,
@@ -40,7 +84,7 @@ from sdft_intervention_v005 import (
     find_optimal_lambda,
     scan_lambda_tradeoff,
 )
-from sdft_phi_graph_v005 import (
+from sdft_phi_graph_v006 import (
     PhiGraphData,
     build_phi_graph_data,
     render_phi_energy_graph_svg,
@@ -517,6 +561,13 @@ class ReportContext:
     uncertainty_desc:  str = ""
     additional_obs_rows: str = ""
 
+    # §4-1 SDFT 写像（外部から設定。省略時はデフォルト値を使用）
+    mapping_nodes:    str = ""
+    mapping_links:    str = ""
+    mapping_field:    str = ""
+    mapping_boundary: str = ""
+    mapping_regime:   str = ""
+
     @classmethod
     def from_state(
         cls,
@@ -705,7 +756,7 @@ def generate_report(
     Parameters
     ----------
     ctx           : ReportContext（全データ）
-    template_path : report_template_v005.html のパス
+    template_path : report_template_v006.html のパス
     output_path   : 保存先パス（省略時は返値のみ）
 
     Returns
@@ -718,7 +769,7 @@ def generate_report(
     now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
 
     # KPI ステータス
-    from sdft_v005_core import get_kpi_status
+    from sdft_v006_core import get_kpi_status
     S_norm = ctx.H_bit / math.log2(32 + EPS)
     s_css, s_txt = get_kpi_status('S', S_norm)
     d_css, d_txt = get_kpi_status('D', ctx.D)
@@ -877,6 +928,12 @@ def generate_report(
         # §6 総論
         "{{UNCERTAINTY_DESC}}":     ctx.uncertainty_desc or "追加データによる精度向上が望ましい。",
         "{{ADDITIONAL_OBS_ROWS}}":  ctx.additional_obs_rows or _default_obs_rows(),
+        # §4-1 SDFT 写像
+        "{{MAPPING_NODES}}":    ctx.mapping_nodes    or "分析対象の構成要素（部門・ゾーン・セグメント）",
+        "{{MAPPING_LINKS}}":    ctx.mapping_links    or "構成要素間の接続（強度・方向のみ）",
+        "{{MAPPING_FIELD}}":    ctx.mapping_field    or "外部環境（市場・競合・マクロ環境）",
+        "{{MAPPING_BOUNDARY}}": ctx.mapping_boundary or "レジームの境界（分析対象の範囲）",
+        "{{MAPPING_REGIME}}":   ctx.mapping_regime   or "同一オペモードを持つ領域（A / B）",
     }
 
     for placeholder, value in replacements.items():
@@ -930,7 +987,7 @@ if __name__ == "__main__":
     random.seed(42)
 
     print("=" * 60)
-    print("SDFT revised v0.0.5 — レポート生成パイプライン 動作確認")
+    print("SDFT revised v0.0.6 — レポート生成パイプライン 動作確認")
     print("=" * 60)
 
     # サンプルデータ
@@ -984,16 +1041,16 @@ if __name__ == "__main__":
         intervention_result=result,
         opt_lambda=opt_lam,
         H_series=[s.H for s in states],
-        title="SDFT v0.0.5 動作確認レポート",
+        title="SDFT v0.0.6 動作確認レポート",
         subject="サンプル施設",
         purpose="構造場診断・介入最適化",
     )
 
     # レポート生成（テンプレートがある場合）
     template_path = os.path.join(
-        os.path.dirname(__file__), '..', 'assets', 'report_template_v005.html'
+        os.path.dirname(__file__), '..', 'assets', 'report_template_v006.html'
     )
-    output_path = "/mnt/user-data/outputs/sdft-report-v005-test.html"
+    output_path = "/mnt/user-data/outputs/sdft-report-v006-test.html"
 
     if os.path.exists(template_path):
         generate_report(ctx, template_path, output_path)

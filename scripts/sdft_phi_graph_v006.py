@@ -1,6 +1,6 @@
 """
-sdft_phi_graph_v005.py
-SDFT revised v0.0.5 — §3 Φ エネルギー-時刻グラフ
+sdft_phi_graph_v006.py
+SDFT revised v0.0.6 — §3 Φ エネルギー-時刻グラフ
 
 §3 の「Φ エネルギー-時刻グラフ」を SVG として生成する。
 
