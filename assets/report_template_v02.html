@@ -3,30 +3,23 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SDFT revised v0.0.6 — {{REPORT_TITLE}}</title>
+<title>SDFT revised v0.2 — {{REPORT_TITLE}}</title>
 <!--
-  report_template_v006.html
-  sdft-revised v0.0.6 レポートテンプレート
-  Fill all placeholder values via sdft_report_v006.py before serving.
-  DO NOT output this file directly as a response.
+  report_template_v02.html
+  sdft-revised v0.2 レポートテンプレート（多様体版）
+  Fill all placeholder values via sdft_v02_report.py before serving.
 -->
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family:"Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif; font-size:14px; line-height:1.7; color:#1a1a2e; background:#f4f6f9; }
   .report-wrap { max-width:1100px; margin:0 auto; padding:24px 16px 60px; }
-
-  /* ── カード ── */
   .section-card { background:#fff; border-radius:12px; border:1px solid #e0e4ed; padding:28px 32px; margin-bottom:24px; }
   .section-title { font-size:1.1rem; font-weight:700; color:#1a3a5c; margin-bottom:18px; display:flex; align-items:center; gap:10px; }
   .section-number { background:#1a3a5c; color:#fff; border-radius:50%; width:28px; height:28px; display:inline-flex; align-items:center; justify-content:center; font-size:0.85rem; font-weight:700; flex-shrink:0; }
-
-  /* ── ヘッダー ── */
   .report-header { background:linear-gradient(135deg,#1a3a5c 0%,#2d5f8a 100%); border-radius:12px; padding:32px 36px; color:#fff; margin-bottom:24px; }
   .report-header h1 { font-size:1.6rem; font-weight:700; margin-bottom:12px; }
   .report-meta { display:flex; gap:24px; flex-wrap:wrap; font-size:0.9rem; opacity:.85; }
   .version-badge { background:rgba(255,255,255,.2); border:1px solid rgba(255,255,255,.4); border-radius:20px; padding:2px 10px; font-size:.8rem; font-weight:700; }
-
-  /* ── KPI グリッド ── */
   .kpi-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:12px; margin-top:16px; }
   .kpi-card { background:#f8f9fb; border:1px solid #e0e4ed; border-radius:10px; padding:16px 12px; text-align:center; }
   .kpi-label { font-size:.78rem; color:#6b7a99; margin-bottom:6px; }
@@ -37,25 +30,17 @@
   .kpi-status.warn  { background:#fef9e7; color:#b7770d; }
   .kpi-status.alert { background:#fef0ef; color:#c0392b; }
   .kpi-status.mid   { background:#f0f0f0; color:#555; }
-
-  /* Φ 専用カード */
   .phi-card { background:#1a3a5c; border-radius:10px; padding:18px 20px; margin-top:14px; color:#fff; }
   .phi-card-title { font-size:.82rem; opacity:.75; margin-bottom:6px; }
   .phi-value { font-size:1.8rem; font-weight:700; }
   .phi-delta { font-size:.82rem; margin-top:6px; opacity:.8; }
-
-  /* フェーズバッジ */
   .phase-badge { display:inline-block; padding:4px 16px; border-radius:20px; font-weight:700; font-size:.95rem; margin-bottom:12px; }
   .phase-living  { background:#eafaf1; color:#1e8449; border:1px solid #a9dfbf; }
   .phase-frozen  { background:#eaf3fb; color:#1a5276; border:1px solid #aed6f1; }
   .phase-runaway { background:#fef9e7; color:#d35400; border:1px solid #f9e79f; }
   .phase-noise   { background:#fef5e7; color:#b7770d; border:1px solid #f8c471; }
   .phase-collapse{ background:#fef0ef; color:#c0392b; border:1px solid #f1948a; }
-
-  /* 相転移アラート */
   .phase-alert-box { background:#fef0ef; border:1px solid #e74c3c; border-radius:8px; padding:12px 16px; margin-top:16px; color:#c0392b; font-size:.9rem; }
-
-  /* 𝓣 ベクトル表示 */
   .tension-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:10px; margin-top:16px; }
   .tension-card { background:#f0f4f8; border:1px solid #dde3ed; border-radius:8px; padding:12px 10px; text-align:center; }
   .tension-label { font-size:.75rem; color:#2d5f8a; font-weight:700; margin-bottom:4px; }
@@ -64,12 +49,6 @@
   .tension-evidence { font-size:.68rem; padding:1px 5px; border-radius:4px; margin-top:4px; display:inline-block; }
   .ev-derived   { background:#eaf3fb; color:#1a5276; }
   .ev-assumed   { background:#fef9e7; color:#b7770d; }
-  .tension-alpha { font-size:.68rem; color:#d35400; margin-top:2px; }
-
-
-  /* §5 シナリオ */
-
-  /* §3 設計方針ボックス */
   .intervention-box { background:#f0f4f8; border:1px solid #c0d0e0; border-radius:10px; padding:20px 24px; }
   .intervention-title { font-size:1rem; font-weight:700; color:#1a3a5c; margin-bottom:14px; }
   .priority-table { width:100%; border-collapse:collapse; margin-top:12px; font-size:.88em; }
@@ -79,13 +58,9 @@
   .priority-bar { background:#1a3a5c; height:8px; border-radius:4px; }
   .best-badge { background:#1a3a5c; color:#fff; border-radius:4px; padding:1px 8px; font-size:.75em; }
   .impl-note { background:#fef9e7; border:1px solid #f8c471; border-radius:6px; padding:8px 14px; margin-top:14px; font-size:.85rem; color:#7d6608; }
-
-  /* SDFT 写像テーブル */
   .mapping-table { width:100%; border-collapse:collapse; margin-top:12px; }
   .mapping-table th { background:#f0f4f8; padding:10px 14px; text-align:left; font-size:.85rem; color:#1a3a5c; border-bottom:1px solid #e0e4ed; }
   .mapping-table td { padding:10px 14px; border-bottom:1px solid #f0f0f0; font-size:.9rem; }
-
-  /* 証拠分類テーブル */
   .evidence-table { width:100%; border-collapse:collapse; margin-top:12px; }
   .evidence-table th { background:#f0f4f8; padding:8px 12px; text-align:left; font-size:.82rem; color:#1a3a5c; border-bottom:1px solid #e0e4ed; }
   .evidence-table td { padding:8px 12px; border-bottom:1px solid #f0f0f0; font-size:.85rem; }
@@ -93,29 +68,20 @@
   .ev-derived-t { color:#1a5276; font-weight:600; }
   .ev-assumed-t { color:#b7770d; font-weight:600; }
   .ev-hypothesis{ color:#884ea0; font-weight:600; }
-
-  /* 位相図 */
   .phase-diagram-wrap { display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-top:16px; }
   .chart-title { font-size:.85rem; font-weight:600; color:#1a3a5c; margin-bottom:8px; }
-
-  /* シナリオテーブル */
   .scenario-table { width:100%; border-collapse:collapse; margin-top:12px; }
   .scenario-table th { background:#f0f4f8; padding:10px 14px; text-align:center; font-size:.85rem; color:#1a3a5c; border:1px solid #e0e4ed; }
   .scenario-table td { padding:10px 14px; border:1px solid #f0f0f0; text-align:center; font-size:.88rem; }
-
-  /* エグゼクティブサマリー */
   .exec-summary h3 { font-size:.95rem; color:#1a3a5c; margin:16px 0 6px; }
   .exec-action-list { list-style:none; padding:0; }
   .exec-action-list li { padding:8px 12px; margin:4px 0; background:#f0f4f8; border-radius:6px; border-left:3px solid #1a3a5c; font-size:.9rem; }
   .risk-box { background:#fef5e7; border:1px solid #f8c471; border-radius:8px; padding:10px 14px; margin-top:8px; font-size:.9rem; color:#7d6608; }
-
-  /* 用語集 */
   .glossary-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:12px; }
   .glossary-item { background:#f8f9fb; border:1px solid #e0e4ed; border-radius:8px; padding:10px 14px; }
   .glossary-term { font-weight:700; color:#1a3a5c; font-size:.9rem; }
   .glossary-desc { font-size:.82rem; color:#555; margin-top:3px; }
   .table-wrap { overflow-x:auto; margin-top:8px; }
-
   @media print { body{background:#fff;} .report-wrap{padding:0;} .section-card{break-inside:avoid; border:1px solid #ccc;} }
   @page { margin:20mm; }
 </style>
@@ -126,7 +92,7 @@
 <!-- ヘッダー -->
 <div class="report-header">
   <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;">
-    <span class="version-badge">SDFT revised v0.0.6</span>
+    <span class="version-badge">SDFT revised v0.2（多様体版）</span>
   </div>
   <h1>{{REPORT_TITLE}}</h1>
   <div class="report-meta">
@@ -159,43 +125,43 @@
   現在フェーズ：<span class="phase-badge {{PHASE_CSS}}">{{PHASE_LABEL}}</span>
   <span style="font-size:.88rem;color:#555;margin-left:8px;">{{PHASE_EXPLANATION}}</span>
 
-  <!-- 構造場変数 KPI -->
+  <!-- Layer 1 構造場変数 KPI -->
   <div class="kpi-grid">
     <div class="kpi-card">
-      <div class="kpi-label">S（熱力学的エントロピー）</div>
-      <div class="kpi-value">{{S_VALUE}}</div>
-      <div class="kpi-unit">[J/K] Derived</div>
-      <span class="kpi-status {{S_STATUS_CSS}}">{{S_STATUS}}</span>
+      <div class="kpi-label">S_g（軌道体積エントロピー）</div>
+      <div class="kpi-value">{{SG_VALUE}}</div>
+      <div class="kpi-unit">Derived</div>
+      <span class="kpi-status {{SG_STATUS_CSS}}">{{SG_STATUS}}</span>
     </div>
     <div class="kpi-card">
-      <div class="kpi-label">D（フラクタル次元）</div>
+      <div class="kpi-label">D（相関次元）</div>
       <div class="kpi-value">{{D_VALUE}}</div>
-      <div class="kpi-unit">[1-2] Derived</div>
+      <div class="kpi-unit">Grassberger-Procaccia　Derived</div>
       <span class="kpi-status {{D_STATUS_CSS}}">{{D_STATUS}}</span>
     </div>
     <div class="kpi-card">
-      <div class="kpi-label">H（Hurst指数）</div>
-      <div class="kpi-value">{{H_VALUE}}</div>
-      <div class="kpi-unit">[0-1] Derived</div>
-      <span class="kpi-status {{H_STATUS_CSS}}">{{H_STATUS}}</span>
+      <div class="kpi-label">λ₁（最大リアプノフ指数）</div>
+      <div class="kpi-value">{{LAMBDA1_VALUE}}</div>
+      <div class="kpi-unit">Rosenstein　Derived</div>
+      <span class="kpi-status {{LAMBDA1_STATUS_CSS}}">{{LAMBDA1_STATUS}}</span>
     </div>
     <div class="kpi-card">
-      <div class="kpi-label">F（自由エネルギー）</div>
-      <div class="kpi-value">{{F_VALUE}}</div>
-      <div class="kpi-unit">[J] Derived</div>
-      <span class="kpi-status {{F_STATUS_CSS}}">{{F_STATUS}}</span>
+      <div class="kpi-label">F_geom = λ₂（スペクトルギャップ）</div>
+      <div class="kpi-value">{{FGEOM_VALUE}}</div>
+      <div class="kpi-unit">Fiedler値　Derived</div>
+      <span class="kpi-status {{FGEOM_STATUS_CSS}}">{{FGEOM_STATUS}}</span>
     </div>
     <div class="kpi-card">
       <div class="kpi-label">μ（化学ポテンシャル）</div>
       <div class="kpi-value">{{MU_VALUE}}</div>
-      <div class="kpi-unit">[J/人] Derived = 2√T₂</div>
+      <div class="kpi-unit">= T₂（測地距離）　Derived</div>
       <span class="kpi-status mid">—</span>
     </div>
   </div>
 
   <!-- Φ カード -->
   <div class="phi-card">
-    <div class="phi-card-title">Φ（グランドポテンシャル）= F − μN　[J]　Derived</div>
+    <div class="phi-card-title">Φ（グランドポテンシャル）= F_geom − μN　Derived</div>
     <div class="phi-value">{{PHI_VALUE}}</div>
     <div class="phi-delta">dΦ/dt ≈ {{PHI_DELTA}}　｜　目標閾値 Φ₀ = {{PHI_THRESHOLD}}　｜　N = {{N_VALUE}} 人 [Observed]</div>
   </div>
@@ -206,21 +172,20 @@
     <div class="tension-card">
       <div class="tension-label">T₁</div>
       <div class="tension-value">{{T1_VALUE}}</div>
-      <div class="tension-desc">スケール差</div>
+      <div class="tension-desc">体積スケール差</div>
       <span class="tension-evidence ev-derived">{{T1_EVIDENCE}}</span>
     </div>
     <div class="tension-card">
       <div class="tension-label">T₂</div>
       <div class="tension-value">{{T2_VALUE}}</div>
-      <div class="tension-desc">幾何学的距離</div>
+      <div class="tension-desc">測地距離</div>
       <span class="tension-evidence ev-derived">{{T2_EVIDENCE}}</span>
     </div>
     <div class="tension-card">
       <div class="tension-label">T₃</div>
       <div class="tension-value">{{T3_VALUE}}</div>
-      <div class="tension-desc">非対称差</div>
-      <span class="tension-evidence ev-derived">{{T3_EVIDENCE}}</span>
-      <div class="tension-alpha">α={{T3_ALPHA}}</div>
+      <div class="tension-desc">平行移動不整合</div>
+      <span class="tension-evidence ev-assumed">{{T3_EVIDENCE}}</span>
     </div>
     <div class="tension-card">
       <div class="tension-label">T₄</div>
@@ -231,7 +196,7 @@
     <div class="tension-card">
       <div class="tension-label">T₅</div>
       <div class="tension-value">{{T5_VALUE}}</div>
-      <div class="tension-desc">通信路損失</div>
+      <div class="tension-desc">埋め込み歪み</div>
       <span class="tension-evidence ev-derived">{{T5_EVIDENCE}}</span>
     </div>
   </div>
@@ -253,40 +218,24 @@
     </p>
 
     <table class="priority-table">
-      <thead>
-        <tr>
-          <th>操作変数</th>
-          <th>∂Φ/∂u_i（感度）</th>
-          <th>priority_score</th>
-          <th>介入の実体</th>
-        </tr>
-      </thead>
+      <thead><tr><th>操作変数</th><th>∂Φ/∂u_i（感度）</th><th>priority_score</th><th>介入の実体</th></tr></thead>
       <tbody>
         <tr>
           <td><strong>u₁ = N</strong>（人数）{{BEST_N_BADGE}}</td>
-          <td>-2√T₂ = {{SENSITIVITY_N}}</td>
-          <td>
-            {{PRIORITY_N}}
-            <div class="priority-bar-wrap"><div class="priority-bar" style="width:{{PRIORITY_N_PCT}}%"></div></div>
-          </td>
+          <td>−μ = −T₂ = {{SENSITIVITY_N}}</td>
+          <td>{{PRIORITY_N}}<div class="priority-bar-wrap"><div class="priority-bar" style="width:{{PRIORITY_N_PCT}}%"></div></div></td>
           <td>集客・送客・人員配置・流入制御</td>
         </tr>
         <tr>
-          <td><strong>u₂ = T₂</strong>（距離）{{BEST_T2_BADGE}}</td>
-          <td>-N/√T₂ = {{SENSITIVITY_T2}}</td>
-          <td>
-            {{PRIORITY_T2}}
-            <div class="priority-bar-wrap"><div class="priority-bar" style="width:{{PRIORITY_T2_PCT}}%"></div></div>
-          </td>
-          <td>レジーム間の体験・文化・情報の差を縮める施策</td>
+          <td><strong>u₂ = T₂</strong>（測地距離）{{BEST_T2_BADGE}}</td>
+          <td>−N = {{SENSITIVITY_T2}}</td>
+          <td>{{PRIORITY_T2}}<div class="priority-bar-wrap"><div class="priority-bar" style="width:{{PRIORITY_T2_PCT}}%"></div></div></td>
+          <td>レジーム間の多様体上の距離を縮める施策</td>
         </tr>
         <tr>
           <td><strong>u₃ = θ</strong>（構造）{{BEST_THETA_BADGE}}</td>
           <td>≈ {{SENSITIVITY_THETA}}</td>
-          <td>
-            {{PRIORITY_THETA}}
-            <div class="priority-bar-wrap"><div class="priority-bar" style="width:{{PRIORITY_THETA_PCT}}%"></div></div>
-          </td>
+          <td>{{PRIORITY_THETA}}<div class="priority-bar-wrap"><div class="priority-bar" style="width:{{PRIORITY_THETA_PCT}}%"></div></div></td>
           <td>環境・組織・空間設計など構造的変化</td>
         </tr>
       </tbody>
@@ -300,29 +249,20 @@
     </div>
   </div>
 
-  <!-- Φ エネルギー-時刻グラフ -->
-  <h3 style="font-size:.95rem;color:#1a3a5c;margin:22px 0 10px;">
-    Φ エネルギー-時刻グラフ
-  </h3>
+  <h3 style="font-size:.95rem;color:#1a3a5c;margin:22px 0 10px;">Φ エネルギー-時刻グラフ</h3>
   <p style="font-size:.83rem;color:#6b7a99;margin-bottom:10px;">
-    青線：実際の Φ 軌跡　／　灰色破線：介入なし場合の推定軌跡　／
-    赤破線：介入閾値 Φ₀　／　色付き矢印：介入点での Φ 跳ね上がり
+    青線：実際の Φ 軌跡　／　灰色破線：介入なし推定　／　赤破線：介入閾値 Φ₀　／　色付き矢印：介入点
   </p>
   {{PHI_ENERGY_GRAPH_SVG}}
 
-  <!-- 介入詳細テーブル -->
-  <h3 style="font-size:.95rem;color:#1a3a5c;margin:20px 0 10px;">
-    介入詳細（操作変数・ΔΦ・priority）
-  </h3>
+  <h3 style="font-size:.95rem;color:#1a3a5c;margin:20px 0 10px;">介入詳細（操作変数・ΔΦ・priority）</h3>
   {{PHI_INTERVENTION_TABLE}}
-
 </section>
 
 <!-- §4 変革実行環境の診断 -->
 <section class="section-card" id="diagnosis">
   <div class="section-title"><span class="section-number">4</span>変革実行環境の診断</div>
 
-  <!-- 4-1. SDFT 写像 -->
   <h3 style="font-size:.95rem;color:#1a3a5c;margin-bottom:10px;">4-1. SDFT 写像</h3>
   <div class="table-wrap">
     <table class="mapping-table">
@@ -337,21 +277,13 @@
     </table>
   </div>
 
-  <!-- 4-2 行動条件診断 -->
   <h3 style="font-size:.95rem;color:#1a3a5c;margin:20px 0 10px;">4-2. 行動条件診断</h3>
   <p style="font-size:.83rem;color:#6b7a99;margin-bottom:10px;">
-    𝓣・Φ・H の読み替えによる診断。新しい変数は使用しない。全項目 Derived。
+    𝓣・Φ・λ₁ の読み替えによる診断。全項目 Derived。
   </p>
   <div class="table-wrap">
     <table class="evidence-table">
-      <thead>
-        <tr>
-          <th>診断項目</th>
-          <th>対応変数</th>
-          <th>ステータス</th>
-          <th>解釈</th>
-        </tr>
-      </thead>
+      <thead><tr><th>診断項目</th><th>対応変数</th><th>ステータス</th><th>解釈</th></tr></thead>
       <tbody>{{ACTION_CONDITION_ROWS}}</tbody>
     </table>
   </div>
@@ -361,16 +293,13 @@
     <span style="font-size:.88rem;margin-left:10px;color:#555;">{{ACTION_OVERALL_MESSAGE}}</span>
   </div>
 
-  <!-- 4-3 エッジ障壁ヒートマップ -->
   <h3 style="font-size:.95rem;color:#1a3a5c;margin:20px 0 10px;">4-3. エッジ障壁ヒートマップ</h3>
   <p style="font-size:.83rem;color:#6b7a99;margin-bottom:10px;">
-    各エッジの flow_ease = (1 − μ/μ_max) × (1 − T₅)　
-    μ=2√T₂ [Derived]　T₅ [Derived]　μ_max [Assumed]
+    各エッジの flow_ease = (1 − μ/μ_max) × (1 − T₅)　μ=T₂（測地距離） [Derived]　T₅ [Derived]　μ_max [Assumed]
   </p>
   {{EDGE_HEATMAP_TABLE}}
   <div style="margin-top:16px;">{{EDGE_HEATMAP_SVG}}</div>
 
-  <!-- 4-4. 証拠分類表 -->
   <h3 style="font-size:.95rem;color:#1a3a5c;margin:20px 0 10px;">4-4. 証拠分類表</h3>
   <div class="table-wrap">
     <table class="evidence-table">
@@ -385,14 +314,14 @@
   <div class="section-title"><span class="section-number">5</span>現在のフェーズ判定と環境変化リスク</div>
 
   <div class="phase-diagram-wrap">
-    <!-- S-D 位相空間図 -->
+    <!-- S_g-D 位相空間図 -->
     <div>
-      <div class="chart-title">S-D 位相空間図（現在位置：●）</div>
+      <div class="chart-title">S_g-D 位相空間図（現在位置：●）</div>
       <svg viewBox="0 0 300 280" xmlns="http://www.w3.org/2000/svg" style="background:#f8f9fb;border-radius:8px;border:1px solid #e0e4ed;">
         <line x1="40" y1="240" x2="280" y2="240" stroke="#7f8c8d" stroke-width="1.5"/>
         <line x1="40" y1="240" x2="40"  y2="20"  stroke="#7f8c8d" stroke-width="1.5"/>
-        <text x="160" y="265" text-anchor="middle" font-size="11" fill="#5d6d7e">S（エントロピー）→</text>
-        <text x="12"  y="130" text-anchor="middle" font-size="11" fill="#5d6d7e" transform="rotate(-90,12,130)">D（フラクタル次元）→</text>
+        <text x="160" y="265" text-anchor="middle" font-size="11" fill="#5d6d7e">S_g（軌道体積エントロピー）→</text>
+        <text x="12"  y="130" text-anchor="middle" font-size="11" fill="#5d6d7e" transform="rotate(-90,12,130)">D（相関次元）→</text>
         <rect x="40"  y="20"  width="120" height="110" fill="#eafaf1" opacity="0.6"/>
         <text x="75"  y="55"  font-size="9" fill="#1e8449" text-anchor="middle">Living System</text>
         <rect x="160" y="20"  width="120" height="110" fill="#fef9e7" opacity="0.7"/>
@@ -406,49 +335,40 @@
         <text x="40"  y="255" text-anchor="middle" font-size="9" fill="#7f8c8d">0</text>
         <text x="160" y="255" text-anchor="middle" font-size="9" fill="#7f8c8d">0.5</text>
         <text x="280" y="255" text-anchor="middle" font-size="9" fill="#7f8c8d">1.0</text>
-        <text x="32"  y="240" text-anchor="end" font-size="9" fill="#7f8c8d">1.0</text>
-        <text x="32"  y="130" text-anchor="end" font-size="9" fill="#7f8c8d">1.5</text>
-        <text x="32"  y="20"  text-anchor="end" font-size="9" fill="#7f8c8d">2.0</text>
+        <text x="32"  y="240" text-anchor="end" font-size="9" fill="#7f8c8d">0</text>
+        <text x="32"  y="130" text-anchor="end" font-size="9" fill="#7f8c8d">0.5</text>
+        <text x="32"  y="20"  text-anchor="end" font-size="9" fill="#7f8c8d">1.0</text>
         <circle cx="{{SD_X}}" cy="{{SD_Y}}" r="9" fill="#1a3a5c" opacity="0.9"/>
         <circle cx="{{SD_X}}" cy="{{SD_Y}}" r="5" fill="#e8a020"/>
         <text x="{{SD_X}}" y="{{SD_Y_LABEL}}" text-anchor="middle" font-size="9" font-weight="bold" fill="#1a3a5c">現在</text>
       </svg>
     </div>
 
-    <!-- H 時系列 -->
+    <!-- λ₁ 時系列 -->
     <div>
-      <div class="chart-title">H（Hurst指数）時系列 — 低下に注意（先行予兆）</div>
+      <div class="chart-title">λ₁（リアプノフ指数）時系列 — 上昇に注意（カオス化の先行予兆）</div>
       <svg viewBox="0 0 300 280" xmlns="http://www.w3.org/2000/svg" style="background:#f8f9fb;border-radius:8px;border:1px solid #e0e4ed;">
         <line x1="40" y1="240" x2="280" y2="240" stroke="#7f8c8d" stroke-width="1.5"/>
         <line x1="40" y1="240" x2="40"  y2="20"  stroke="#7f8c8d" stroke-width="1.5"/>
         <line x1="40" y1="130" x2="280" y2="130" stroke="#e74c3c" stroke-width="1" stroke-dasharray="5,3" opacity="0.7"/>
-        <text x="282" y="133" font-size="9" fill="#e74c3c">H=0.5</text>
+        <text x="282" y="133" font-size="9" fill="#e74c3c">λ₁=0</text>
         <text x="160" y="265" text-anchor="middle" font-size="11" fill="#5d6d7e">時系列（過去→現在）</text>
-        <text x="12"  y="130" text-anchor="middle" font-size="11" fill="#5d6d7e" transform="rotate(-90,12,130)">H値</text>
-        <text x="35" y="243" text-anchor="end" font-size="9" fill="#7f8c8d">0.0</text>
-        <text x="35" y="133" text-anchor="end" font-size="9" fill="#7f8c8d">0.5</text>
-        <text x="35" y="23"  text-anchor="end" font-size="9" fill="#7f8c8d">1.0</text>
-        <polyline points="{{H_POLYLINE}}" fill="none" stroke="#e74c3c" stroke-width="2.5" stroke-linejoin="round"/>
-        <circle cx="{{H_CURRENT_X}}" cy="{{H_CURRENT_Y}}" r="5" fill="#e74c3c"/>
-        <polygon points="40,240 {{H_POLYLINE}} {{H_CURRENT_X}},240" fill="#e74c3c" opacity="0.10"/>
-        <text x="{{H_CURRENT_X}}" y="{{H_CURRENT_Y_LABEL}}" font-size="9" font-weight="bold" fill="#c0392b">{{H_VALUE}}</text>
+        <text x="12"  y="130" text-anchor="middle" font-size="11" fill="#5d6d7e" transform="rotate(-90,12,130)">λ₁値</text>
+        <text x="35" y="243" text-anchor="end" font-size="9" fill="#7f8c8d">-0.5</text>
+        <text x="35" y="133" text-anchor="end" font-size="9" fill="#7f8c8d">0</text>
+        <text x="35" y="23"  text-anchor="end" font-size="9" fill="#7f8c8d">0.5</text>
+        <polyline points="{{LAM_POLYLINE}}" fill="none" stroke="#e74c3c" stroke-width="2.5" stroke-linejoin="round"/>
+        <circle cx="{{LAM_CURRENT_X}}" cy="{{LAM_CURRENT_Y}}" r="5" fill="#e74c3c"/>
+        <polygon points="40,240 {{LAM_POLYLINE}} {{LAM_CURRENT_X}},240" fill="#e74c3c" opacity="0.10"/>
+        <text x="{{LAM_CURRENT_X}}" y="{{LAM_CURRENT_Y_LABEL}}" font-size="9" font-weight="bold" fill="#c0392b">{{LAMBDA1_VALUE}}</text>
       </svg>
     </div>
   </div>
 
-
-  <!-- シナリオ表 -->
   <h3 style="font-size:.95rem;color:#1a3a5c;margin:20px 0 10px;">予測シナリオ</h3>
   <div class="table-wrap">
     <table class="scenario-table">
-      <thead>
-        <tr>
-          <th>指標</th>
-          <th>楽観シナリオ（6ヶ月後）</th>
-          <th>基準シナリオ（6ヶ月後）</th>
-          <th>悲観シナリオ（6ヶ月後）</th>
-        </tr>
-      </thead>
+      <thead><tr><th>指標</th><th>楽観シナリオ（6ヶ月後）</th><th>基準シナリオ（6ヶ月後）</th><th>悲観シナリオ（6ヶ月後）</th></tr></thead>
       <tbody>{{SCENARIO_ROWS}}</tbody>
     </table>
   </div>
@@ -472,29 +392,28 @@
 <section class="section-card" id="glossary">
   <div class="section-title"><span class="section-number">7</span>巻末用語集</div>
   <div class="glossary-grid">
-    <div class="glossary-item"><div class="glossary-term">$H_{bit}$（シャノンエントロピー）</div><div class="glossary-desc">$-\sum p_i\log_2 p_i$ [bit]。分布の情報量。</div></div>
-    <div class="glossary-item"><div class="glossary-term">$S$（熱力学的エントロピー）</div><div class="glossary-desc">$k_B\ln 2\cdot H_{bit}$ [J/K]。散逸度。$k_B=1.38\times10^{-23}$ J/K。</div></div>
-    <div class="glossary-item"><div class="glossary-term">$D$（フラクタル次元）</div><div class="glossary-desc">ヒグチ法。1.0〜2.0。時系列の複雑性。</div></div>
-    <div class="glossary-item"><div class="glossary-term">$H$（Hurst指数）</div><div class="glossary-desc">0〜1。>0.5 で持続傾向。相転移の先行指標。</div></div>
-    <div class="glossary-item"><div class="glossary-term">$G$（Fisher情報行列）</div><div class="glossary-desc">統計多様体上の計量テンソル。</div></div>
-    <div class="glossary-item"><div class="glossary-term">$T$（情報的温度）</div><div class="glossary-desc">$\mathrm{tr}(G^{-1})/(d\cdot k_B)$ [K]。揺らぎのスケール。</div></div>
-    <div class="glossary-item"><div class="glossary-term">$U$（内部エネルギー）</div><div class="glossary-desc">$\mathrm{tr}(G)/d$ [J相当]。Fisher行列トレース。</div></div>
-    <div class="glossary-item"><div class="glossary-term">$F$（自由エネルギー）</div><div class="glossary-desc">$U-T\cdot S$ [J]。系が使えるエネルギー。</div></div>
-    <div class="glossary-item"><div class="glossary-term">$\Phi$（グランドポテンシャル）</div><div class="glossary-desc">$F-\mu N$ [J]。開放系のポテンシャル。放置すれば減少。</div></div>
-    <div class="glossary-item"><div class="glossary-term">$\mu$（化学ポテンシャル）</div><div class="glossary-desc">$2\sqrt{T_2}$ [J/人]。1人の移動コスト。</div></div>
-    <div class="glossary-item"><div class="glossary-term">$T_1$（対数分配関数差）</div><div class="glossary-desc">スケール・自由度の乖離。</div></div>
-    <div class="glossary-item"><div class="glossary-term">$T_2$（Bhattacharyya距離）</div><div class="glossary-desc">状態点の幾何学的ずれ（Fisher-Rao近似）。</div></div>
-    <div class="glossary-item"><div class="glossary-term">$T_3$（α-ダイバージェンス）</div><div class="glossary-desc">非対称な意味的差（α≠0）。</div></div>
-    <div class="glossary-item"><div class="glossary-term">$T_4$（統計的ホロノミー）</div><div class="glossary-desc">多様体の曲率差。</div></div>
-    <div class="glossary-item"><div class="glossary-term">$T_5$（通信路損失率）</div><div class="glossary-desc">$1-I(X_A;X_B)/H(X_A)$。情報損失割合。</div></div>
-    <div class="glossary-item"><div class="glossary-term">Living System</div><div class="glossary-desc">中S・中D・中〜高H。健全な動的平衡。</div></div>
-    <div class="glossary-item"><div class="glossary-term">Frozen Order</div><div class="glossary-desc">低S・低D・高H。安定だが変化なし。</div></div>
-    <div class="glossary-item"><div class="glossary-term">Noise Dominant</div><div class="glossary-desc">高S・高D・低H。構造崩壊の前兆。</div></div>
+    <div class="glossary-item"><div class="glossary-term">$S_g$（軌道体積エントロピー）</div><div class="glossary-desc">$k$-NN ball 体積の平均対数。軌道の広がり。</div></div>
+    <div class="glossary-item"><div class="glossary-term">$D$（相関次元）</div><div class="glossary-desc">Grassberger-Procaccia 法。アトラクタの次元。</div></div>
+    <div class="glossary-item"><div class="glossary-term">$\lambda_1$（最大リアプノフ指数）</div><div class="glossary-desc">近傍軌道の発散率。$<0$ で安定、$>0$ でカオス。</div></div>
+    <div class="glossary-item"><div class="glossary-term">$\lambda_2$（スペクトルギャップ）</div><div class="glossary-desc">Fiedler 値。系の結合の強さ。$= F_{\text{geom}}$。</div></div>
+    <div class="glossary-item"><div class="glossary-term">$\kappa$（Ollivier-Ricci 曲率）</div><div class="glossary-desc">離散リッチ曲率。$>0$ で球的、$<0$ で双曲的。</div></div>
+    <div class="glossary-item"><div class="glossary-term">$d_g$（測地距離）</div><div class="glossary-desc">$k$-NN グラフ上の Dijkstra 最短経路長。</div></div>
+    <div class="glossary-item"><div class="glossary-term">$\Phi$（グランドポテンシャル）</div><div class="glossary-desc">$F_{\text{geom}} - \mu N$。放置すれば減少。</div></div>
+    <div class="glossary-item"><div class="glossary-term">$\mu$（化学ポテンシャル）</div><div class="glossary-desc">$T_2$（測地距離）。1人の移動コスト。</div></div>
+    <div class="glossary-item"><div class="glossary-term">$T_1$</div><div class="glossary-desc">体積スケール差。レジーム間の「大きさ」の違い。</div></div>
+    <div class="glossary-item"><div class="glossary-term">$T_2$</div><div class="glossary-desc">測地距離。レジーム間の多様体上の距離。</div></div>
+    <div class="glossary-item"><div class="glossary-term">$T_3$</div><div class="glossary-desc">平行移動不整合（簡易版：PCA フレーム回転角）。</div></div>
+    <div class="glossary-item"><div class="glossary-term">$T_4$</div><div class="glossary-desc">曲率差（簡易版）。ホロノミーの代理指標。</div></div>
+    <div class="glossary-item"><div class="glossary-term">$T_5$</div><div class="glossary-desc">埋め込み歪み。$1-\sigma_{\min}/\sigma_{\max}$。</div></div>
+    <div class="glossary-item"><div class="glossary-term">Takens 埋め込み</div><div class="glossary-desc">時系列を $d$ 次元遅延座標空間に持ち上げる。</div></div>
+    <div class="glossary-item"><div class="glossary-term">Living System</div><div class="glossary-desc">中 $S_g$・中 $D$・安定 $\lambda_1$。健全な動的平衡。</div></div>
+    <div class="glossary-item"><div class="glossary-term">Frozen Order</div><div class="glossary-desc">低 $S_g$・低 $D$・強安定 $\lambda_1$。硬直状態。</div></div>
+    <div class="glossary-item"><div class="glossary-term">Noise Dominant</div><div class="glossary-desc">高 $S_g$・高 $D$・カオス $\lambda_1$。構造崩壊の前兆。</div></div>
     <div class="glossary-item"><div class="glossary-term">Observed / Derived</div><div class="glossary-desc">Observed：実測値。Derived：観測値から算出。</div></div>
     <div class="glossary-item"><div class="glossary-term">Assumed / Hypothesis</div><div class="glossary-desc">Assumed：仮定値。Hypothesis：解釈的推論。</div></div>
   </div>
   <p style="margin-top:20px;font-size:.8rem;color:#888;text-align:right;">
-    株式会社アドインテ SDFT位相空間関係性モデル sdft-revised v0.0.6
+    株式会社アドインテ SDFT位相空間関係性モデル sdft-revised v0.2
   </p>
 </section>
 
